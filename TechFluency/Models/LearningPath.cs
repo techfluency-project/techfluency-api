@@ -1,9 +1,10 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using TechFluency.Repository;
 
 namespace TechFluency.Models
 {
-    public class LearningPath
+    public class LearningPath : IEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -16,7 +17,7 @@ namespace TechFluency.Models
         public string Description { get; set; } 
 
         [BsonElement("stages")]
-        public List<PathStage> Stages { get; set; } 
+        public List<string> Stages { get; set; } 
 
     }
 }

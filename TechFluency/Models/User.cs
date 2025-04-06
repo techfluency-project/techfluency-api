@@ -1,9 +1,10 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using TechFluency.Repository;
 
 namespace TechFluency.Models
 {
-    public class User
+    public class User : IEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

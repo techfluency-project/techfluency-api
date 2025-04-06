@@ -2,10 +2,11 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using TechFluency.Enums;
+using TechFluency.Repository;
 
 namespace TechFluency.Models
 {
-    public class Flashcard
+    public class Flashcard : IEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

@@ -12,8 +12,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<MongoDbContext>();
-builder.Services.AddScoped<TechFluencyRepository>();
-builder.Services.AddScoped<TechFluencyService>();
+builder.Services.AddScoped(typeof(ITechFluencyRepository<>), typeof(TechFluencyRepository<>));
+builder.Services.AddScoped<QuestionRepository>();
+builder.Services.AddScoped<QuestionService>();
+
 
 var app = builder.Build();
 

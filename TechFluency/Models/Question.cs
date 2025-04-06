@@ -1,10 +1,11 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using TechFluency.Enums;
+using TechFluency.Repository;
 
 namespace TechFluency.Models
 {
-    public class Question
+    public class Question : IEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

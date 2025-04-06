@@ -1,10 +1,11 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
+using TechFluency.Repository;
 
 namespace TechFluency.Models
 {
-    public class PathStage
+    public class PathStage : IEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

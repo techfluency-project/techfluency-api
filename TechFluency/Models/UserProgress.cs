@@ -1,10 +1,11 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using TechFluency.Enums;
+using TechFluency.Repository;
 
 namespace TechFluency.Models
 {
-    public class UserProgress
+    public class UserProgress : IEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -32,6 +33,6 @@ namespace TechFluency.Models
 
         [BsonElement("badges")]
         [BsonIgnoreIfNull]
-        public List<Badge> Badges { get; set; }
+        public List<string> Badges { get; set; }
     }
 }

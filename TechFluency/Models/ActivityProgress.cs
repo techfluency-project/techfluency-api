@@ -8,14 +8,18 @@ namespace TechFluency.Models
     {
         [BsonElement("questionTopic")]
         [BsonRepresentation(BsonType.String)]
-        public EnumTopic Topic { get; set; } 
+        public EnumTopic Topic { get; set; }
 
-        [BsonElement("correctCount")]
-        [BsonRepresentation(BsonType.Int32)]
-        public int CorrectCount { get; set; }  
+        [BsonElement("questionType")]
+        [BsonRepresentation(BsonType.String)]
+        public EnumTypeQuestion Type { get; set; }
 
-        [BsonElement("totalCount")]
+        [BsonElement("totalCompleted")]
         [BsonRepresentation(BsonType.Int32)]
-        public int TotalCount { get; set; }  
+        public int TotalCompleted { get; set; }  
+
+        [BsonElement("totalCorrect")]
+        [BsonRepresentation(BsonType.Int32)]
+        public int TotalCorrect { get; set; }  
     }
 }
