@@ -16,7 +16,7 @@ namespace TechFluency.Controllers
             _questionService = questionService;
         }
 
-        [HttpGet("GetAll")]
+       [HttpGet]
        public IEnumerable<Question> GetAllQuestions()
         {
             return _questionService.GetAll();

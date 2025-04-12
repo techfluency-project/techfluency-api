@@ -8,7 +8,7 @@ namespace TechFluency.Repository
 {
     public class TechFluencyRepository<T> : ITechFluencyRepository<T> where T : class, IEntity
     {
-        private readonly IMongoCollection<T> _collection;
+        protected readonly IMongoCollection<T> _collection;
 
         public TechFluencyRepository(MongoDbContext context, string collectionName)
         {
@@ -32,8 +32,7 @@ namespace TechFluency.Repository
         {
             try
             {
-                var filter = Builders<T>.Filter.Eq(x => x.Id, id);
-                var result = _collection.DeleteOne(filter);
+                var result = _collection.DeleteOne(x => x.Id == id);
             }
             catch (MongoException ex)
             {
@@ -45,8 +44,7 @@ namespace TechFluency.Repository
         {
             try
             {
-                var filter = Builders<T>.Filter.Eq(x => x.Id, id);
-                return _collection.Find(filter).FirstOrDefault();
+                return _collection.Find(x => x.Id == id).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -72,8 +70,7 @@ namespace TechFluency.Repository
         {
             try
             {
-                var filter = Builders<T>.Filter.Eq(x => x.Id, id);
-                var result = _collection.ReplaceOne(filter, entity);
+                var result = _collection.ReplaceOne(x => x.Id == id, entity);
             }
             catch (MongoException ex)
             {
