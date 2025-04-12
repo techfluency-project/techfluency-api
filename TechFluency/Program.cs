@@ -15,6 +15,7 @@ builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddScoped(typeof(ITechFluencyRepository<>), typeof(TechFluencyRepository<>));
 builder.Services.AddScoped<QuestionRepository>();
 builder.Services.AddScoped<QuestionService>();
+builder.Services.AddScoped<PlacementTestService>();
 
 
 var app = builder.Build();
