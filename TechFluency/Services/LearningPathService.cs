@@ -16,10 +16,10 @@ namespace TechFluency.Services
             _pathStageService = pathStageService;
         }
 
-        public void MountingLearningPath(User user)
+        public void MountingLearningPath(string userId)
         {
-            var userProgress = _userProgressRepository.GetUserProgress(user.Id);
-            var learningPath = CreateLearningPath(user.Id, userProgress.Level);
+            var userProgress = _userProgressRepository.GetUserProgress(userId);
+            var learningPath = CreateLearningPath(userId, userProgress.Level);
             var stages = _pathStageService.GetStagesForLearningPath(learningPath.Level, learningPath.Id);
             userProgress.LearningPathId = learningPath.Id;
 

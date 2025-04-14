@@ -18,11 +18,11 @@ namespace TechFluency.Controllers
         }
 
         [HttpPost]
-        public IActionResult MountLearningPath(User user)
+        public IActionResult MountLearningPath(string userId)
         {
             try
             {
-                _learningPathService.MountingLearningPath(user);
+                _learningPathService.MountingLearningPath(userId);
                 return Ok(new { message = "Trilha montada com sucesso!" });
             }
             catch (Exception ex)
