@@ -25,9 +25,25 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddScoped(typeof(ITechFluencyRepository<>), typeof(TechFluencyRepository<>));
+
+// USER PROGRESS
+builder.Services.AddScoped<UserProgresRepository>();
+
+// QUESTION
 builder.Services.AddScoped<QuestionRepository>();
 builder.Services.AddScoped<QuestionService>();
+
+// PLACEMENT TEST
 builder.Services.AddScoped<PlacementTestService>();
+
+// LEARNING PATH
+builder.Services.AddScoped<LearningPathRepository>();
+builder.Services.AddScoped<LearningPathService>();
+
+// PATHSTAGE
+builder.Services.AddScoped<PathStageRepository>();
+builder.Services.AddScoped<PathStageService>();
+
 
 
 var app = builder.Build();

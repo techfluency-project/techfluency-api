@@ -21,11 +21,11 @@ namespace TechFluency.Services
             try
             {
                 var random = new Random();
-                var levelsList = Enum.GetNames(typeof(EnumLevel)).ToList();
+                var levelsList = Enum.GetValues(typeof(EnumLevel)).Cast<EnumLevel>().ToList();
                 var listQuestions = new List<Question>();
                 foreach (var level in levelsList)
                 {
-                    var questions = _questionRespository.GetQuestionByLevel(level);
+                    var questions = _questionRespository.GetQuestionsByLevel(level);
                     var fiveRandom = questions.OrderBy(q => random.Next()).Take(5).ToList();
                     listQuestions.AddRange(fiveRandom);
                 }

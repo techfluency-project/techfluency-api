@@ -34,5 +34,8 @@ namespace TechFluency.Models
         [BsonElement("badges")]
         [BsonIgnoreIfNull]
         public List<string> Badges { get; set; }
+
+        [BsonElement("learningPathId")]
+        public string LearningPathId { get; set; }
     }
 }

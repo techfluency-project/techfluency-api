@@ -17,23 +17,23 @@ namespace TechFluency.Repository
             return _collection.Find(x => x.Id == id).FirstOrDefault();
         }
 
-        public List<Question> GetQuestionByLevel(string levelString) 
+        public List<Question> GetQuestionsByLevel(EnumLevel level) 
         {
-            var level = EnumLevel.Beginner;
-            switch(levelString.ToLower())
-            {
-                case "beginner":
-                    level = EnumLevel.Beginner;
-                    break;
-                case "intermediate":
-                    level = EnumLevel.Intermediate;
-                    break;
-                case "advanced":
-                    level = EnumLevel.Advanced;
-                    break;
-            }
             return _collection.Find(x => x.Level == level).ToList();
         }
 
+        public List<string> GetQuestionsForStage(EnumLevel level, EnumTopic topic)
+        {
+            var random = new Random();
+            var questions = this.GetQuestionsByLevel(level);
+            var questionsByTopic = questions.Where(x => x.Topic == topic);
+            var randomQuestions = questionsByTopic
+                                    .OrderBy(x => random.Next())
+                                    .Take(8)
+                                    .Select(x => x.Id)
+                                    .ToList();
+
+            return randomQuestions;
+        }
     }
 }
