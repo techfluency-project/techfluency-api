@@ -7,11 +7,11 @@ namespace TechFluency.Services
 {
     public class PathStageService
     {
-        private readonly QuestionRepository _questionRepository;
+        private readonly QuestionService _questionService;
         private readonly PathStageRepository _pathStageRepository;
-        public PathStageService(QuestionRepository questionRepository, PathStageRepository pathStageRepository, MongoDbContext context) 
+        public PathStageService(QuestionService questionService, PathStageRepository pathStageRepository, MongoDbContext context) 
         {
-            _questionRepository = questionRepository;
+            _questionService = questionService;
             _pathStageRepository = pathStageRepository;
         }
 
@@ -21,7 +21,7 @@ namespace TechFluency.Services
             foreach (EnumTopic topic in Enum.GetValues(typeof(EnumTopic)))
             {
                 var stage = new PathStage();
-                var questions = _questionRepository.GetQuestionsForStage(learningPathLevel, topic);
+                var questions = _questionService.GetQuestionsForStage(learningPathLevel, topic);
                 xpReward += 200;
 
                 stage.Name = topic.ToString();

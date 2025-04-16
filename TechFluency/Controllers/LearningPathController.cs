@@ -30,5 +30,19 @@ namespace TechFluency.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        public IActionResult GetLearningPath(string userId)
+        {
+            try
+            {
+                var learningPath = _learningPathService.GetLearningPath(userId);
+                return Ok(learningPath);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

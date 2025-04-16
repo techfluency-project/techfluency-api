@@ -22,18 +22,6 @@ namespace TechFluency.Repository
             return _collection.Find(x => x.Level == level).ToList();
         }
 
-        public List<string> GetQuestionsForStage(EnumLevel level, EnumTopic topic)
-        {
-            var random = new Random();
-            var questions = this.GetQuestionsByLevel(level);
-            var questionsByTopic = questions.Where(x => x.Topic == topic);
-            var randomQuestions = questionsByTopic
-                                    .OrderBy(x => random.Next())
-                                    .Take(8)
-                                    .Select(x => x.Id)
-                                    .ToList();
-
-            return randomQuestions;
-        }
+        
     }
 }

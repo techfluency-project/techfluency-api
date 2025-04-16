@@ -21,5 +21,19 @@ namespace TechFluency.Controllers
         {
             return _questionService.GetAll();
         }
+
+        [HttpGet("GetQuestionById")]
+        public IActionResult GetQuestionById(string id)
+        {
+            try
+            {
+                var question = _questionService.GetQuestionById(id);
+                return Ok(question);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

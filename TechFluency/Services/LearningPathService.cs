@@ -7,13 +7,15 @@ namespace TechFluency.Services
 {
     public class LearningPathService
     {
+        private readonly LearningPathRepository _learningPathRepository;
         private readonly UserProgresRepository _userProgressRepository;
         private readonly PathStageService _pathStageService;
 
-        public LearningPathService(MongoDbContext context, UserProgresRepository userProgressRepository, PathStageService pathStageService) 
+        public LearningPathService(MongoDbContext context, UserProgresRepository userProgressRepository, PathStageService pathStageService, LearningPathRepository learningPathRepository) 
         {
             _userProgressRepository = userProgressRepository;
             _pathStageService = pathStageService;
+            _learningPathRepository = learningPathRepository;
         }
 
         public void MountingLearningPath(string userId)
@@ -24,6 +26,12 @@ namespace TechFluency.Services
             userProgress.LearningPathId = learningPath.Id;
 
             learningPath.Stages.AddRange(stages);
+        }
+
+        public LearningPath GetLearningPath(string userId)
+        {
+            var userProgress = _userProgressRepository.GetUserProgress(userId);
+            return _learningPathRepository.GetLearningPath(userProgress.LearningPathId);
         }
 
         private LearningPath CreateLearningPath(string userId, EnumLevel level)

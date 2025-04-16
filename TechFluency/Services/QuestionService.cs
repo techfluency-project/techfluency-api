@@ -1,4 +1,5 @@
-﻿using TechFluency.Models;
+﻿using TechFluency.Enums;
+using TechFluency.Models;
 using TechFluency.Repository;
 
 namespace TechFluency.Services
@@ -17,9 +18,23 @@ namespace TechFluency.Services
             return _questionRepository.GetAll();
         }
 
-        public void Add(Question question)
+        public Question GetQuestionById(string id)
         {
-            _questionRepository.Add(question);
+            return _questionRepository.GetQuestionById(id);
+        }
+
+        public List<string> GetQuestionsForStage(EnumLevel level, EnumTopic topic)
+        {
+            var random = new Random();
+            var questions = _questionRepository.GetQuestionsByLevel(level);
+            var questionsByTopic = questions.Where(x => x.Topic == topic);
+            var randomQuestions = questionsByTopic
+                                    .OrderBy(x => random.Next())
+                                    .Take(5)
+                                    .Select(x => x.Id)
+                                    .ToList();
+
+            return randomQuestions;
         }
     }
 }
