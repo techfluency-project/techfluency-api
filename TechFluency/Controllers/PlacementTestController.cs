@@ -30,8 +30,8 @@ namespace TechFluency.Controllers
             }
         }
 
-        [HttpGet("GetResultFromPlacementTest")]
-        public IActionResult GetResultFromPlacementTest(List<UserAnswerDTO> userAnswers)
+        [HttpPost("ResultFromPlacementTest")]
+        public IActionResult ResultFromPlacementTest(List<UserAnswerDTO> userAnswers)
         {
             try
             {
