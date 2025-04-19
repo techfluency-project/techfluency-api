@@ -1,0 +1,30 @@
+# Pastas comuns a ignorar
+.vs/
+bin/
+obj/
+TestResults/
+*.user
+*.suo
+*.rsuser
+*.userosscache
+*.sln.docstates
+
+# Diretórios de build
+x64/
+x86/
+build/
+out/
+
+# Logs e temporários
+*.log
+*.tmp
+
+# Configurações específicas
+*.DotSettings.user
+*.ncrunch*
+_ReSharper*/
+
+# Arquivos gerados
+*.dll
+*.exe
+*.pdb
