@@ -7,7 +7,7 @@
         Image,
         Listening, 
         Writing,
-        CompletePhrases,
+        Shuffled,
         Conversation
     }
 }

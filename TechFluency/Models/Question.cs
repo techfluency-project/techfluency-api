@@ -12,8 +12,12 @@ namespace TechFluency.Models
         public string Id { get; set; }
 
         [BsonElement("question")]
-        [BsonRequired]
+        [BsonRepresentation(BsonType.String)]
         public string? QuestionText { get; set; }
+
+        [BsonElement("questionConversation")]
+        [BsonIgnoreIfNull]
+        public List<ConversationLine> QuestionTextConversation { get; set; }
 
         [BsonElement("level")]
         [BsonRepresentation(BsonType.String)]
