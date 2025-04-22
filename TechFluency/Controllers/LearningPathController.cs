@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TechFluency.Models;
 using TechFluency.Services;
@@ -7,6 +8,7 @@ namespace TechFluency.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LearningPathController : ControllerBase
     {
 

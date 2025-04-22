@@ -1,4 +1,5 @@
-﻿using TechFluency.Context;
+﻿using MongoDB.Driver;
+using TechFluency.Context;
 using TechFluency.Models;
 
 namespace TechFluency.Repository
@@ -13,6 +14,11 @@ namespace TechFluency.Repository
         public void GetQuestionsByLevel()
         {
             
+        }
+
+        public async Task<User> GetUserByUsername(string userName)
+        {
+            return await _collection.Find(x => x.Username == userName).FirstOrDefaultAsync();
         }
     }
 }
