@@ -20,15 +20,12 @@ namespace TechFluency.Models
         public List<ConversationLine> QuestionTextConversation { get; set; }
 
         [BsonElement("level")]
-        [BsonRepresentation(BsonType.String)]
         public EnumLevel Level { get; set; }
 
         [BsonElement("type")]
-        [BsonRepresentation(BsonType.String)]
         public EnumTypeQuestion Type { get; set; }
 
         [BsonElement("topic")]
-        [BsonRepresentation(BsonType.String)]
         public EnumTopic Topic { get; set; }
 
         [BsonElement("options")]

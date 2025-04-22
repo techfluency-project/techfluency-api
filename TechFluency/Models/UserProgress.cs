@@ -16,7 +16,6 @@ namespace TechFluency.Models
         public string UserId { get; set; }
 
         [BsonElement("level")]
-        [BsonRepresentation(BsonType.String)]
         public EnumLevel Level { get; set; }
             
         [BsonElement("dailyStudyTime")]

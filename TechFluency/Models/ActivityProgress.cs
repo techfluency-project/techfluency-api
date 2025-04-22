@@ -7,11 +7,9 @@ namespace TechFluency.Models
     public class ActivityProgress
     {
         [BsonElement("questionTopic")]
-        [BsonRepresentation(BsonType.String)]
         public EnumTopic Topic { get; set; }
 
         [BsonElement("questionType")]
-        [BsonRepresentation(BsonType.String)]
         public EnumTypeQuestion Type { get; set; }
 
         [BsonElement("totalCompleted")]
