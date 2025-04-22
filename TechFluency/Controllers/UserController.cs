@@ -22,7 +22,7 @@ namespace TechFluency.Controllers
         [HttpPost("sign-up")]
         public User UserRegistration(UserRegistrationDTO userRequest)
         {
-           return _userService.userRegistration(userRequest);
+           return _userService.UserRegistration(userRequest);
         }
 
         [AllowAnonymous]

@@ -15,7 +15,7 @@ namespace TechFluency.Services
             _userRepository = userRepository;
         }
 
-        public User userRegistration(UserRegistrationDTO userRequest)
+        public User UserRegistration(UserRegistrationDTO userRequest)
         {
             userRequest.Password = HashPassword(userRequest.Password);
             var user = new User
@@ -31,6 +31,7 @@ namespace TechFluency.Services
             };
 
             _userRepository.Add(user);
+            
             return _userRepository.Get(user.Id);
         } 
     }
