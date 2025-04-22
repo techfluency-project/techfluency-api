@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TechFluency.DTOs;
 using TechFluency.Models;
@@ -8,6 +9,7 @@ namespace TechFluency.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] 
     public class PlacementTestController : ControllerBase
     {
         private readonly PlacementTestService _placementTestService;
