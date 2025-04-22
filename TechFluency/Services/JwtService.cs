@@ -13,9 +13,12 @@ namespace TechFluency.Services
     {
         private readonly UserRepository _userRepository;
         private readonly IConfiguration _configuration;
-        public JwtService(UserRepository userRepository, IConfiguration configuration) {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public JwtService(UserRepository userRepository, IConfiguration configuration, IHttpContextAccessor httpContextAccessor) {
             _userRepository = userRepository;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
          public async Task<LoginResponseDTO?> Authenticate(LoginRequestDTO loginDTO)
@@ -37,7 +40,8 @@ namespace TechFluency.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Name, loginDTO.Username)
+                    new Claim(JwtRegisteredClaimNames.Name, loginDTO.Username),
+                    new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", userAccount.Id.ToString()),
                 }),
                 Expires = tokenExpiryTimeStamp,
                 Issuer = issuer,
@@ -57,7 +61,11 @@ namespace TechFluency.Services
                 UserName = loginDTO.Username
             };
          }
-      
+        
+        public string IdOfUserAuthenticated()
+        {
+            return _httpContextAccessor.HttpContext?.User?.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+        }
 
     }
 }

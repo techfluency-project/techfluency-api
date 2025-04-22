@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using TechFluency.Enums;
 using TechFluency.Repository;
 
 namespace TechFluency.Models
@@ -38,8 +39,7 @@ namespace TechFluency.Models
         public string? Phone { get; set; }
         
         [BsonElement("gender")]
-        [BsonRepresentation(BsonType.String)]
-        public string? Gender { get; set; }
+        public EnumGender? Gender { get; set; }
 
         [BsonElement("birthdate")]
         [BsonRepresentation(BsonType.DateTime)]

@@ -1,4 +1,7 @@
-﻿using TechFluency.Enums;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using TechFluency.DTOs;
+using TechFluency.Enums;
 using TechFluency.Models;
 using TechFluency.Repository;
 
@@ -7,10 +10,12 @@ namespace TechFluency.Services
     public class QuestionService
     {
         private readonly QuestionRepository _questionRepository;
+        private readonly JwtService _jwtService;
 
-        public QuestionService(QuestionRepository questionRepository)
+        public QuestionService(QuestionRepository questionRepository, JwtService jwtService)
         {
             _questionRepository = questionRepository;
+            _jwtService = jwtService;
         }
 
         public IEnumerable<Question> GetAll()
@@ -35,6 +40,12 @@ namespace TechFluency.Services
                                     .ToList();
 
             return randomQuestions;
+        }
+
+        public string AnswerQuestion()
+        {
+            var userId = _jwtService.IdOfUserAuthenticated();
+            return userId;
         }
     }
 }

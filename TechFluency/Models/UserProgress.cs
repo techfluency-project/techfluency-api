@@ -23,8 +23,7 @@ namespace TechFluency.Models
         public EnumDailyStudyTime DailyStudyTime { get; set; }
 
         [BsonElement("xp")]
-        [BsonRepresentation(BsonType.String)]
-        public int TotalXP { get; set; }
+        public int TotalXP { get; set; } = 0;
 
         [BsonElement("activities")]
         [BsonIgnoreIfNull]
