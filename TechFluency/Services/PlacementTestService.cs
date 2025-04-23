@@ -10,10 +10,15 @@ namespace TechFluency.Services
     public class PlacementTestService
     {
         private readonly QuestionRepository _questionRespository;
+        private readonly UserProgresRepository _userProgresRepository;
+        private readonly JwtService _jwtService;
 
-        public PlacementTestService(QuestionRepository questionRespository)
+
+        public PlacementTestService(QuestionRepository questionRespository, JwtService jwtService, UserProgresRepository userProgresRepository)
         {
             _questionRespository = questionRespository;
+            _jwtService = jwtService;
+            _userProgresRepository = userProgresRepository;
         }
 
         public List<Question> GetQuestionsForPlacementTest()
@@ -39,11 +44,14 @@ namespace TechFluency.Services
             }
         }
 
-        public string GetResultFromPlacementTest(List<UserAnswerDTO> userAnswers)
+        public async Task<string> GetResultFromPlacementTest(List<UserAnswerDTO> userAnswers)
         {
+            var user = await _jwtService.GetCurrentUser();
             var totalScore = 0;
             object lockObj = new();
             var userLevel = EnumLevel.Beginner;
+            var userProgress = _userProgresRepository.GetUserProgress(user.Id);
+
 
             var parallelOptions = new ParallelOptions
             {
@@ -83,6 +91,9 @@ namespace TechFluency.Services
             {
                 userLevel = EnumLevel.Advanced;
             }
+
+            userProgress.Level = userLevel;
+            _userProgresRepository.Update(userProgress.Id, userProgress);
 
             return userLevel.ToString();
         }

@@ -40,5 +40,10 @@ namespace TechFluency.Services
             
             return _userRepository.Get(user.Id);
         } 
+
+        public void GetUserById(string id)
+        {
+            _userRepository.GetUserById(id);
+        }
     }
 }

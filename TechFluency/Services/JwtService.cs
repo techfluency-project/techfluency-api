@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using TechFluency.Context;
 using TechFluency.DTOs;
+using TechFluency.Models;
 using TechFluency.Repository;
 using static BCrypt.Net.BCrypt;
 
@@ -62,9 +63,10 @@ namespace TechFluency.Services
             };
          }
         
-        public string IdOfUserAuthenticated()
+        public Task<User> GetCurrentUser()
         {
-            return _httpContextAccessor.HttpContext?.User?.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            return _userRepository.GetUserById(userId);
         }
 
     }

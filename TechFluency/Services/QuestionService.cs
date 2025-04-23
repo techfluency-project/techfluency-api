@@ -42,10 +42,10 @@ namespace TechFluency.Services
             return randomQuestions;
         }
 
-        public string AnswerQuestion()
+        public async Task<User> AnswerQuestion()
         {
-            var userId = _jwtService.IdOfUserAuthenticated();
-            return userId;
+            var user = await _jwtService.GetCurrentUser();
+            return user;
         }
     }
 }

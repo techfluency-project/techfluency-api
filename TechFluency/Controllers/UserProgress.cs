@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TechFluency.Models;
 using TechFluency.Repository;
 using TechFluency.Services;
 
@@ -17,7 +18,7 @@ namespace TechFluency.Controllers
         }
 
         [HttpGet]
-        public string Teste()
+        public Task<User> Teste()
         {
             return _questionService.AnswerQuestion();
         }

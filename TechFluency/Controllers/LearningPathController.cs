@@ -20,11 +20,11 @@ namespace TechFluency.Controllers
         }
 
         [HttpPost]
-        public IActionResult MountLearningPath(string userId)
+        public IActionResult MountLearningPath()
         {
             try
             {
-                _learningPathService.MountingLearningPath(userId);
+                _learningPathService.MountingLearningPath();
                 return Ok(new { message = "Trilha montada com sucesso!" });
             }
             catch (Exception ex)
@@ -34,11 +34,11 @@ namespace TechFluency.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetLearningPath(string userId)
+        public IActionResult GetLearningPath()
         {
             try
             {
-                var learningPath = _learningPathService.GetLearningPath(userId);
+                var learningPath = _learningPathService.GetLearningPath();
                 return Ok(learningPath);
             }
             catch (Exception ex)

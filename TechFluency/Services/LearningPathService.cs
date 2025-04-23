@@ -10,27 +10,38 @@ namespace TechFluency.Services
         private readonly LearningPathRepository _learningPathRepository;
         private readonly UserProgresRepository _userProgressRepository;
         private readonly PathStageService _pathStageService;
+        private readonly JwtService _jwtService;
 
-        public LearningPathService(MongoDbContext context, UserProgresRepository userProgressRepository, PathStageService pathStageService, LearningPathRepository learningPathRepository) 
+        public LearningPathService(MongoDbContext context, UserProgresRepository userProgressRepository, PathStageService pathStageService, LearningPathRepository learningPathRepository, JwtService jwtService) 
         {
             _userProgressRepository = userProgressRepository;
             _pathStageService = pathStageService;
             _learningPathRepository = learningPathRepository;
+            _jwtService = jwtService;
         }
 
-        public void MountingLearningPath(string userId)
+        public async Task MountingLearningPath()
         {
-            var userProgress = _userProgressRepository.GetUserProgress(userId);
-            var learningPath = CreateLearningPath(userId, userProgress.Level);
-            var stages = _pathStageService.GetStagesForLearningPath(learningPath.Level, learningPath.Id);
-            userProgress.LearningPathId = learningPath.Id;
+            try
+            {
+                var user = await _jwtService.GetCurrentUser();
+                var userProgress = _userProgressRepository.GetUserProgress(user.Id);
+                var learningPath = CreateLearningPath(user.Id, userProgress.Level);
+                var stages = _pathStageService.GetStagesForLearningPath(learningPath.Level, learningPath.Id);
+                userProgress.LearningPathId = learningPath.Id;
 
-            learningPath.Stages.AddRange(stages);
+                learningPath.Stages.AddRange(stages);
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+            }
         }
 
-        public LearningPath GetLearningPath(string userId)
+        public async Task<LearningPath> GetLearningPath()
         {
-            var userProgress = _userProgressRepository.GetUserProgress(userId);
+            var user = await _jwtService.GetCurrentUser();
+            var userProgress = _userProgressRepository.GetUserProgress(user.Id);
             return _learningPathRepository.GetLearningPath(userProgress.LearningPathId);
         }
 
