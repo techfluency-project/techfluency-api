@@ -11,13 +11,11 @@ namespace TechFluency.Services
     public class QuestionService
     {
         private readonly QuestionRepository _questionRepository;
-        private readonly JwtService _jwtService;
         private readonly UserProgresRepository _userProgresRepository;
 
-        public QuestionService(QuestionRepository questionRepository, JwtService jwtService, UserProgresRepository userProgresRepository)
+        public QuestionService(QuestionRepository questionRepository, UserProgresRepository userProgresRepository)
         {
             _questionRepository = questionRepository;
-            _jwtService = jwtService;
             _userProgresRepository = userProgresRepository;
         }
 

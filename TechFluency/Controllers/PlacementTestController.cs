@@ -21,7 +21,7 @@ namespace TechFluency.Controllers
             _jwtService = jwtService;
         }
 
-        [HttpGet]
+        [HttpGet("GetQuestionsForPlacementTest")]
         public IEnumerable<Question> GetQuestionsForPlacementTest()
         {
             try

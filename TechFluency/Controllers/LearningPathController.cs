@@ -22,7 +22,7 @@ namespace TechFluency.Controllers
             _jwtService = jwtService;
         }
 
-        [HttpPost]
+        [HttpPost("MountLearningPaths")]
         public async Task<IActionResult> MountLearningPath()
         {
             try
@@ -41,7 +41,7 @@ namespace TechFluency.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("GetLearningPath")]
         public async Task<IActionResult> GetLearningPath()
         {
             try

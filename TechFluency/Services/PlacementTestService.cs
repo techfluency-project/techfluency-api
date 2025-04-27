@@ -11,13 +11,12 @@ namespace TechFluency.Services
     {
         private readonly QuestionRepository _questionRespository;
         private readonly UserProgresRepository _userProgresRepository;
-        private readonly JwtService _jwtService;
 
+        private static readonly Random random = new Random();
 
-        public PlacementTestService(QuestionRepository questionRespository, JwtService jwtService, UserProgresRepository userProgresRepository)
+        public PlacementTestService(QuestionRepository questionRespository, UserProgresRepository userProgresRepository)
         {
             _questionRespository = questionRespository;
-            _jwtService = jwtService;
             _userProgresRepository = userProgresRepository;
         }
 
@@ -25,7 +24,6 @@ namespace TechFluency.Services
         {
             try
             {
-                var random = new Random();
                 var levelsList = Enum.GetValues(typeof(EnumLevel)).Cast<EnumLevel>().ToList();
                 var listQuestions = new List<Question>();
                 foreach (var level in levelsList)
@@ -40,7 +38,7 @@ namespace TechFluency.Services
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw;
             }
         }
 
