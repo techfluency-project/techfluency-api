@@ -44,13 +44,12 @@ namespace TechFluency.Services
             }
         }
 
-        public async Task<string> GetResultFromPlacementTest(List<UserAnswerDTO> userAnswers)
+        public async Task<string> GetResultFromPlacementTest(List<UserAnswerDTO> userAnswers, string userId)
         {
-            var user = await _jwtService.GetCurrentUser();
             var totalScore = 0;
             object lockObj = new();
             var userLevel = EnumLevel.Beginner;
-            var userProgress = _userProgresRepository.GetUserProgress(user.Id);
+            var userProgress = _userProgresRepository.GetUserProgress(userId);
 
 
             var parallelOptions = new ParallelOptions

@@ -30,13 +30,14 @@ namespace TechFluency.Services
                 Phone = userRequest.Phone
             };
             
+            _userRepository.Add(user);
+
             var userProgress = new UserProgress()
             {
                 UserId = user.Id,
             };
-
-            _userRepository.Add(user);
             _userProgresRepository.Add(userProgress);
+
             
             return _userRepository.Get(user.Id);
         } 

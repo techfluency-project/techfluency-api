@@ -13,10 +13,12 @@ namespace TechFluency.Controllers
     public class PlacementTestController : ControllerBase
     {
         private readonly PlacementTestService _placementTestService;
+        private readonly JwtService _jwtService;
 
-        public PlacementTestController(PlacementTestService placementTestService)
+        public PlacementTestController(PlacementTestService placementTestService, JwtService jwtService)
         {
             _placementTestService = placementTestService;
+            _jwtService = jwtService;
         }
 
         [HttpGet]
@@ -33,11 +35,16 @@ namespace TechFluency.Controllers
         }
 
         [HttpPost("ResultFromPlacementTest")]
-        public IActionResult ResultFromPlacementTest(List<UserAnswerDTO> userAnswers)
+        public async Task<IActionResult> ResultFromPlacementTest(List<UserAnswerDTO> userAnswers)
         {
             try
             {
-                var result = _placementTestService.GetResultFromPlacementTest(userAnswers);
+                var user = await _jwtService.GetCurrentUser();
+                if (user == null)
+                {
+                    return BadRequest("User has not been found.");
+                }
+                var result = _placementTestService.GetResultFromPlacementTest(userAnswers, user.Id);
                 return Ok(new {message = "Resultado gerado com sucesso", level = result});
             }
             catch (Exception ex)

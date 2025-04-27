@@ -16,11 +16,5 @@ namespace TechFluency.Controllers
         {
             _questionService = questionService;
         }
-
-        [HttpGet]
-        public Task<User> Teste()
-        {
-            return _questionService.AnswerQuestion();
-        }
     }
 }

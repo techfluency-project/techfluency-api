@@ -20,14 +20,13 @@ namespace TechFluency.Services
             _jwtService = jwtService;
         }
 
-        public async Task MountingLearningPath()
+        public async Task MountingLearningPath(string userId)
         {
             try
             {
-                var user = await _jwtService.GetCurrentUser();
-                var userProgress = _userProgressRepository.GetUserProgress(user.Id);
-                var learningPath = CreateLearningPath(user.Id, userProgress.Level);
-                var stages = _pathStageService.GetStagesForLearningPath(learningPath.Level, learningPath.Id);
+                var userProgress = _userProgressRepository.GetUserProgress(userId);
+                var learningPath = CreateLearningPath(userId, userProgress.Level);
+                var stages = _pathStageService.GetStagesForLearningPath(learningPath.Level, learningPath.Id).ToList();
                 userProgress.LearningPathId = learningPath.Id;
 
                 learningPath.Stages.AddRange(stages);
@@ -38,10 +37,9 @@ namespace TechFluency.Services
             }
         }
 
-        public async Task<LearningPath> GetLearningPath()
+        public async Task<LearningPath> GetLearningPath(string userId)
         {
-            var user = await _jwtService.GetCurrentUser();
-            var userProgress = _userProgressRepository.GetUserProgress(user.Id);
+            var userProgress = _userProgressRepository.GetUserProgress(userId);
             return _learningPathRepository.GetLearningPath(userProgress.LearningPathId);
         }
 
@@ -54,6 +52,8 @@ namespace TechFluency.Services
                 Name = GetPathName(level),
                 Description = GetPathDescription(level)
             };
+
+            _learningPathRepository.Add(learningPath);
 
             return learningPath;
         }
