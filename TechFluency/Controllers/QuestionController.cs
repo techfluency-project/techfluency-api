@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TechFluency.DTOs;
 using TechFluency.Models;
 using TechFluency.Services;
 
@@ -12,17 +13,19 @@ namespace TechFluency.Controllers
     public class QuestionController : ControllerBase
     {
         private readonly QuestionService _questionService;
+        private readonly JwtService _jwtService; 
 
-        public QuestionController(QuestionService questionService)
+        public QuestionController(QuestionService questionService, JwtService jwtService)
         {
             _questionService = questionService;
+            _jwtService = jwtService;
         }
 
-       [HttpGet]
+       [HttpGet("GetAllQuestions")]
        public IEnumerable<Question> GetAllQuestions()
-        {
-            return _questionService.GetAll();
-        }
+       {
+           return _questionService.GetAll();
+       }
 
         [HttpGet("GetQuestionById")]
         public IActionResult GetQuestionById(string id)
@@ -31,6 +34,26 @@ namespace TechFluency.Controllers
             {
                 var question = _questionService.GetQuestionById(id);
                 return Ok(question);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("QuestionAnswer")]
+        public async Task<IActionResult> QuestionAnswer(UserAnswerDTO answer)
+        {
+            try
+            {
+                var user = await _jwtService.GetCurrentUser();
+                if (user == null)
+                {
+                    return BadRequest("User has not been found.");
+                }
+                var response = _questionService.AnswerQuestion(answer, user.Id);
+
+                return Ok(response);
             }
             catch (Exception ex)
             {

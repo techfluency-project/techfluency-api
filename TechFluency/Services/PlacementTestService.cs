@@ -10,17 +10,20 @@ namespace TechFluency.Services
     public class PlacementTestService
     {
         private readonly QuestionRepository _questionRespository;
+        private readonly UserProgresRepository _userProgresRepository;
 
-        public PlacementTestService(QuestionRepository questionRespository)
+        private static readonly Random random = new Random();
+
+        public PlacementTestService(QuestionRepository questionRespository, UserProgresRepository userProgresRepository)
         {
             _questionRespository = questionRespository;
+            _userProgresRepository = userProgresRepository;
         }
 
         public List<Question> GetQuestionsForPlacementTest()
         {
             try
             {
-                var random = new Random();
                 var levelsList = Enum.GetValues(typeof(EnumLevel)).Cast<EnumLevel>().ToList();
                 var listQuestions = new List<Question>();
                 foreach (var level in levelsList)
@@ -35,15 +38,17 @@ namespace TechFluency.Services
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw;
             }
         }
 
-        public string GetResultFromPlacementTest(List<UserAnswerDTO> userAnswers)
+        public async Task<string> GetResultFromPlacementTest(List<UserAnswerDTO> userAnswers, string userId)
         {
             var totalScore = 0;
             object lockObj = new();
             var userLevel = EnumLevel.Beginner;
+            var userProgress = _userProgresRepository.GetUserProgress(userId);
+
 
             var parallelOptions = new ParallelOptions
             {
@@ -83,6 +88,9 @@ namespace TechFluency.Services
             {
                 userLevel = EnumLevel.Advanced;
             }
+
+            userProgress.Level = userLevel;
+            _userProgresRepository.Update(userProgress.Id, userProgress);
 
             return userLevel.ToString();
         }

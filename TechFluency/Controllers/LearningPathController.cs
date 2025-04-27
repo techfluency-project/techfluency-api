@@ -13,18 +13,26 @@ namespace TechFluency.Controllers
     {
 
         private readonly LearningPathService _learningPathService;
+        private readonly JwtService _jwtService;
 
-        public LearningPathController(LearningPathService learningPathService)
+
+        public LearningPathController(LearningPathService learningPathService, JwtService jwtService)
         {
             _learningPathService = learningPathService;
+            _jwtService = jwtService;
         }
 
-        [HttpPost]
-        public IActionResult MountLearningPath(string userId)
+        [HttpPost("MountLearningPaths")]
+        public async Task<IActionResult> MountLearningPath()
         {
             try
             {
-                _learningPathService.MountingLearningPath(userId);
+                var user = await _jwtService.GetCurrentUser();
+                if(user == null)
+                {
+                    return BadRequest("User has not been found.");
+                }
+                _learningPathService.MountingLearningPath(user.Id);
                 return Ok(new { message = "Trilha montada com sucesso!" });
             }
             catch (Exception ex)
@@ -33,12 +41,17 @@ namespace TechFluency.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult GetLearningPath(string userId)
+        [HttpGet("GetLearningPath")]
+        public async Task<IActionResult> GetLearningPath()
         {
             try
             {
-                var learningPath = _learningPathService.GetLearningPath(userId);
+                var user = await _jwtService.GetCurrentUser();
+                if (user == null)
+                {
+                    return BadRequest("User has not been found.");
+                }
+                var learningPath = _learningPathService.GetLearningPath(user.Id);
                 return Ok(learningPath);
             }
             catch (Exception ex)

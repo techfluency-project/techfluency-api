@@ -30,6 +30,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddScoped(typeof(ITechFluencyRepository<>), typeof(TechFluencyRepository<>));
 
+builder.Services.AddHttpContextAccessor();
+
 // USER PROGRESS
 builder.Services.AddScoped<UserProgresRepository>();
 
