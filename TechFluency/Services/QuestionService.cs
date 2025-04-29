@@ -12,11 +12,13 @@ namespace TechFluency.Services
     {
         private readonly QuestionRepository _questionRepository;
         private readonly UserProgresRepository _userProgresRepository;
+        private readonly BadgeService _badgeService;
 
-        public QuestionService(QuestionRepository questionRepository, UserProgresRepository userProgresRepository)
+        public QuestionService(QuestionRepository questionRepository, UserProgresRepository userProgresRepository, BadgeService badgeService)
         {
             _questionRepository = questionRepository;
             _userProgresRepository = userProgresRepository;
+            _badgeService = badgeService;
         }
 
         public IEnumerable<Question> GetAll()
@@ -74,7 +76,8 @@ namespace TechFluency.Services
             bool isCorrect = question.CorrectAnswer == answer.SelectedOption;
             if (isCorrect)
             {
-                existingActivity.TotalCorrect++; 
+                existingActivity.TotalCorrect++;
+                _badgeService.CheckBadgeAchievement(userProgress);
             }
 
             _userProgresRepository.Update(userProgress.Id, userProgress);

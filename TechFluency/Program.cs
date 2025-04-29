@@ -55,6 +55,10 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<JwtService>();
 
+// BADGE
+builder.Services.AddScoped<BadgeService>();
+builder.Services.AddScoped<BadgeRepository>();
+
 // Adds authentication for Swagger requests
 builder.Services.AddSwaggerGen(options =>
 {

@@ -24,7 +24,11 @@ namespace TechFluency.Models
         public EnumLevel Level { get; set; }
 
         [BsonElement("stages")]
-        public List<string> Stages { get; set; } 
+        public List<string> Stages { get; set; }
+
+        [BsonElement("dtCreated")]
+        [BsonRepresentation(BsonType.DateTime)]
+        public DateTime? DtCreated { get; set; } = DateTime.UtcNow;
 
     }
 }

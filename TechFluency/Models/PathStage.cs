@@ -29,5 +29,9 @@ namespace TechFluency.Models
 
         [BsonElement("learningPathId")]
         public string LearningPathId { get; set; }
+
+        [BsonElement("dtCreated")]
+        [BsonRepresentation(BsonType.DateTime)]
+        public DateTime? DtCreated { get; set; } = DateTime.UtcNow;
     }
 }

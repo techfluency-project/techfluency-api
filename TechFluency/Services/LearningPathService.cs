@@ -28,7 +28,9 @@ namespace TechFluency.Services
                 userProgress.LearningPathId = learningPath.Id;
 
                 learningPath.Stages = stages;
+                userProgress.LearningPathId = learningPath.Id;
                 _learningPathRepository.Update(learningPath.Id, learningPath);
+                _userProgressRepository.Update(userProgress.Id, userProgress);
             }
             catch (Exception ex)
             {
