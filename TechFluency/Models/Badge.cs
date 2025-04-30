@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using TechFluency.Repository;
+using TechFluency.Enums;
 
 namespace TechFluency.Models
 {
@@ -25,5 +26,8 @@ namespace TechFluency.Models
         [BsonElement("goal")]
         [BsonRepresentation(BsonType.Int32)]
         public int Goal { get; set; }
+
+        [BsonElement("topic")]
+        public EnumTopic Topic { get; set; }
     }
 }
