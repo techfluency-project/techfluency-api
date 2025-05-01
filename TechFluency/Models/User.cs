@@ -44,5 +44,9 @@ namespace TechFluency.Models
         [BsonElement("birthdate")]
         [BsonRepresentation(BsonType.DateTime)]
         public DateOnly? Birthdate { get; set; }
+
+        [BsonElement("dtCreated")]
+        [BsonRepresentation(BsonType.DateTime)]
+        public DateTime? DtCreated { get; set; } = DateTime.UtcNow;
     }
 }
