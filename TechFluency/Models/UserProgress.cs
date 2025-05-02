@@ -29,6 +29,10 @@ namespace TechFluency.Models
         [BsonIgnoreIfNull]
         public List<ActivityProgress>? Activities { get; set; }
 
+        [BsonElement("stageProgresses")]
+        [BsonIgnoreIfNull]
+        public List<StageProgress> StageProgresses { get; set; } = new();
+
         [BsonElement("badges")]
         [BsonIgnoreIfNull]
         public List<string> Badges { get; set; }

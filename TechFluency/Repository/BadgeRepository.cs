@@ -11,7 +11,7 @@ namespace TechFluency.Repository
 
         }
 
-        public string GetBagdeByTitle(string title)
+        public string GetBagdeIdByTitle(string title)
         {
             return _collection
                 .Find(x => x.Title == title)

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="DTOs\UserAnswerResult.cs" />
+    <Compile Remove="Services\UserProgressService.cs" />
   </ItemGroup>
 
   <ItemGroup>
