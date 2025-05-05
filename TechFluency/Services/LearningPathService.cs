@@ -2,6 +2,7 @@
 using TechFluency.Enums;
 using TechFluency.Models;
 using TechFluency.Repository;
+using TechFluency.Services.Interfaces;
 
 namespace TechFluency.Services
 {
@@ -18,6 +19,7 @@ namespace TechFluency.Services
             _learningPathRepository = learningPathRepository;
         }
 
+
         public async Task MountingLearningPath(string userId)
         {
             try
@@ -29,6 +31,17 @@ namespace TechFluency.Services
 
                 learningPath.Stages = stages;
                 userProgress.LearningPathId = learningPath.Id;
+                foreach (var stage in stages)
+                {
+                    var stageProgress = new StageProgress
+                    {
+                        StageId = stage,
+                        TotalAnswered = 0,
+                        TotalCorrect = 0,
+                        IsCompleted = false
+                    };
+                    userProgress.StageProgresses?.Add(stageProgress);
+                }
                 _learningPathRepository.Update(learningPath.Id, learningPath);
                 _userProgressRepository.Update(userProgress.Id, userProgress);
             }

@@ -16,92 +16,77 @@ namespace TechFluency.Services
             _userProgresRepository = userProgresRepository;
         }
 
+        private readonly Dictionary<EnumTopic, List<(int goal, string BadgeTitle)>> _badgeCriteria = new()
+        {
+            { EnumTopic.Vocabulary, new List<(int, string)>
+                {
+                    (10, BadgesTitles.VOCABULARY_EXPLORER),
+                    (25, BadgesTitles.VOCABULARY_CHALLENGER),
+                    (50, BadgesTitles.VOCABULARY_MASTER),
+                }
+            },
+            { EnumTopic.Daily, new List<(int, string)>
+                {
+                    (5, BadgesTitles.DAILY_EXPLORER),
+                    (15, BadgesTitles.DAILY_CHALLENGER),
+                    (30, BadgesTitles.DAILY_MASTER),
+                }
+            },
+            { EnumTopic.TextInterpretation, new List<(int, string)>
+                {
+                    (10, BadgesTitles.TEXT_INTERPRETATION_EXPLORER),
+                    (20, BadgesTitles.TEXT_INTERPRETATION_CHALLENGER),
+                    (40, BadgesTitles.TEXT_INTERPRETATION_MASTER),
+                }
+            },
+            { EnumTopic.CodeDocumentation, new List<(int, string)>
+                {
+                    (10, BadgesTitles.CODE_DOCUMENTATION_EXPLORER),
+                    (25, BadgesTitles.CODE_DOCUMENTATION_CHALLENGER),
+                    (50, BadgesTitles.CODE_DOCUMENTATION_MASTER),
+                }
+            },
+            { EnumTopic.Interview, new List<(int, string)>
+                {
+                    (5, BadgesTitles.INTERVIEW_EXPLORER),
+                    (15, BadgesTitles.INTERVIEW_CHALLENGER),
+                    (30, BadgesTitles.INTERVIEW_MASTER),
+                }
+            },
+        };
+
         public void CheckBadgeAchievement(UserProgress userProgress)
         {
-            var badgeTitles = new BadgesTitles();
-            var listActivities = userProgress.Activities;
+            var needToUpdate = false;
 
-            foreach (var activity in listActivities)
+            foreach (var activity in userProgress.Activities)
             {
-                switch(activity.Topic)
+                if (!_badgeCriteria.TryGetValue(activity.Topic, out var goals))
+                    continue;
+
+                foreach (var (goal, badgeTitle) in goals)
                 {
-                    case EnumTopic.Vocabulary:
-                        if(activity.TotalCorrect == 10)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.VOCABULARY_EXPLORER));
-                        }
-                        else if(activity.TotalCorrect == 25)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.VOCABULARY_CHALLENGER));
-                        }
-                        else if (activity.TotalCorrect == 50)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.VOCABULARY_MASTER));
-                        }
-                        break;
+                    if (activity.TotalCorrect == goal)
+                    {
+                        var badgeId = _badgeRepository.GetBagdeIdByTitle(badgeTitle);
 
-                    case EnumTopic.Daily:
-                        if (activity.TotalCorrect == 5)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.DAILY_CHALLENGER));
-                        }
-                        else if (activity.TotalCorrect == 6)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.DAILY_EXPLORER));
-                        }
-                        else if (activity.TotalCorrect == 30)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.DAILY_MASTER));
-                        }
-                        break;
+                        if (userProgress.Badges == null)
+                            userProgress.Badges = new List<string>();
 
-                    case EnumTopic.TextInterpretation:
-                        if (activity.TotalCorrect == 10)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.TEXT_INTERPRETATION_EXPLORER));
-                        }
-                        else if (activity.TotalCorrect == 20)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.CODE_DOCUMENTATION_CHALLENGER));
-                        }
-                        else if (activity.TotalCorrect == 40)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.TEXT_INTERPRETATION_MASTER));
-                        }
-                        break;
+                        if(userProgress.Badges.Contains(badgeId))
+                            break;
 
-                    case EnumTopic.CodeDocumentation:
-                        if (activity.TotalCorrect == 10)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.CODE_DOCUMENTATION_EXPLORER));
-                        }
-                        else if (activity.TotalCorrect == 25)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.CODE_DOCUMENTATION_CHALLENGER));
-                        }
-                        else if (activity.TotalCorrect == 50)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.CODE_DOCUMENTATION_MASTER));
-                        }
-                        break;
-
-                    case EnumTopic.Interview:
-                        if (activity.TotalCorrect == 5)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.CODE_DOCUMENTATION_EXPLORER));
-                        }
-                        else if (activity.TotalCorrect == 15)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.CODE_DOCUMENTATION_CHALLENGER));
-                        }
-                        else if (activity.TotalCorrect == 30)
-                        {
-                            userProgress.Badges.Add(_badgeRepository.GetBagdeByTitle(badgeTitles.CODE_DOCUMENTATION_MASTER));
-                        }
-                        break;
+                        userProgress.Badges.Add(badgeId);
+                        needToUpdate = true;
+                    }
                 }
             }
-            _userProgresRepository.Update(userProgress.Id, userProgress);
+
+            if (needToUpdate)
+            {
+                _userProgresRepository.Update(userProgress.Id, userProgress);
+            }
         }
+
     }
 }

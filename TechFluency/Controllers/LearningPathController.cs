@@ -32,7 +32,7 @@ namespace TechFluency.Controllers
                 {
                     return BadRequest("User has not been found.");
                 }
-                _learningPathService.MountingLearningPath(user.Id);
+                await _learningPathService.MountingLearningPath(user.Id);
                 return Ok(new { message = "Trilha montada com sucesso!" });
             }
             catch (Exception ex)

@@ -11,8 +11,7 @@ namespace TechFluency.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [BsonElement("userID")]
-        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("userId")]
         public string UserId { get; set; }
 
         [BsonElement("level")]
@@ -20,7 +19,7 @@ namespace TechFluency.Models
             
         [BsonElement("dailyStudyTime")]
         [BsonRepresentation(BsonType.String)]
-        public EnumDailyStudyTime DailyStudyTime { get; set; }
+        public EnumDailyStudyTime? DailyStudyTime { get; set; }
 
         [BsonElement("xp")]
         public int TotalXP { get; set; } = 0;
@@ -28,6 +27,10 @@ namespace TechFluency.Models
         [BsonElement("activities")]
         [BsonIgnoreIfNull]
         public List<ActivityProgress>? Activities { get; set; }
+
+        [BsonElement("stageProgresses")]
+        [BsonIgnoreIfNull]
+        public List<StageProgress>? StageProgresses { get; set; } = new();
 
         [BsonElement("badges")]
         [BsonIgnoreIfNull]
@@ -39,5 +42,9 @@ namespace TechFluency.Models
         [BsonElement("dtCreated")]
         [BsonRepresentation(BsonType.DateTime)]
         public DateTime? DtCreated { get; set; } = DateTime.UtcNow;
+
+        [BsonElement("pathsCompleted")]
+        [BsonRepresentation(BsonType.String)]
+        public Boolean? pathsCompleted { get; set; }
     }
 }
