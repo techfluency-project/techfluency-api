@@ -1,7 +1,9 @@
-﻿using TechFluency.DTOs;
+﻿using Microsoft.IdentityModel.Tokens;
+using TechFluency.DTOs;
 using TechFluency.Enums;
 using TechFluency.Models;
 using TechFluency.Repository;
+using TechFluency.Services.Interfaces;
 
 namespace TechFluency.Services
 {
@@ -91,7 +93,7 @@ namespace TechFluency.Services
                 userProgress.StageProgresses.Add(stageProgress);
             }
 
-            if (!pathStage.IsCompleted && stageProgress.HasFailed)
+            if (!stageProgress.IsCompleted && stageProgress.HasFailed)
             {
                 stageProgress.TotalAnswered = 0;
                 stageProgress.TotalCorrect = 0;
@@ -104,7 +106,7 @@ namespace TechFluency.Services
 
             _userProgresRepository.Update(userProgress.Id, userProgress);
 
-            bool stageCompleted = pathStage.IsCompleted;
+            bool stageCompleted = stageProgress.IsCompleted;
             bool stageFailed = false;
 
 
@@ -113,9 +115,10 @@ namespace TechFluency.Services
                 double accuracy = (double)stageProgress.TotalCorrect / stageProgress.TotalAnswered;
                 if (accuracy >= 0.7)
                 {
-                    pathStage.IsCompleted = true;
+                    
                     _pathStageRepository.Update(pathStage.Id, pathStage);
-                    stageCompleted = true;
+                    stageProgress.IsCompleted = true;
+                    pathStage.IsCompleted = true;
                 }
                 else
                 {
@@ -123,7 +126,7 @@ namespace TechFluency.Services
                     stageProgress.HasFailed = true;
                 }
             }
-
+           
             _userProgresRepository.Update(userProgress.Id, userProgress);
 
             return new UserAnswerResultDTO

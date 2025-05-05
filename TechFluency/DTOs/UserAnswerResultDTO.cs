@@ -8,5 +8,6 @@
         public int StageAnswered { get; set; }
         public int StageCorrect { get; set; }
         public bool StageFailed { get; set; }
+        public bool? ChangeToNextStage { get; set; }
     }
 }

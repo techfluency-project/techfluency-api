@@ -13,15 +13,18 @@ namespace TechFluency.Controllers
     public class QuestionController : ControllerBase
     {
         private readonly QuestionService _questionService;
-        private readonly JwtService _jwtService; 
+        private readonly JwtService _jwtService;
+        private readonly LevelAdvancementService _levelAdvancementService;
 
-        public QuestionController(QuestionService questionService, JwtService jwtService)
+        public QuestionController(QuestionService questionService, JwtService jwtService,
+            LevelAdvancementService levelAdvancementService)
         {
             _questionService = questionService;
             _jwtService = jwtService;
+            _levelAdvancementService = levelAdvancementService;
         }
 
-       [HttpGet("GetAllQuestions")]
+        [HttpGet("GetAllQuestions")]
        public IEnumerable<Question> GetAllQuestions()
        {
            return _questionService.GetAll();
@@ -52,7 +55,12 @@ namespace TechFluency.Controllers
                     return BadRequest("User has not been found.");
                 }
                 var response = _questionService.AnswerQuestion(answer, user.Id);
+                var changeStage = await _levelAdvancementService.ChangeToNextStage(user.Id);
 
+                if(changeStage) {
+                    response.ChangeToNextStage = true;
+                    return Ok(response); 
+                }
                 return Ok(response);
             }
             catch (Exception ex)

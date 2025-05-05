@@ -59,6 +59,9 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<BadgeService>();
 builder.Services.AddScoped<BadgeRepository>();
 
+//LEVEL ADVANCEMENT
+builder.Services.AddScoped<LevelAdvancementService>();
+
 // Adds authentication for Swagger requests
 builder.Services.AddSwaggerGen(options =>
 {
