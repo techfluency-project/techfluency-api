@@ -2,7 +2,6 @@
 using TechFluency.Enums;
 using TechFluency.Models;
 using TechFluency.Repository;
-using TechFluency.Services.Interfaces;
 
 namespace TechFluency.Services
 {
