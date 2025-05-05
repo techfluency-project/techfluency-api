@@ -7,14 +7,14 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using TechFluency.Models;
 using Microsoft.OpenApi.Models;
+using TechFluency.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
+    options.AddPolicy("AllowAll",
         policy => policy
-            .WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -34,6 +34,7 @@ builder.Services.AddHttpContextAccessor();
 
 // USER PROGRESS
 builder.Services.AddScoped<UserProgresRepository>();
+builder.Services.AddScoped<UserProgressService>();
 
 // QUESTION
 builder.Services.AddScoped<QuestionRepository>();

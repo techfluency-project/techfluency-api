@@ -11,6 +11,11 @@ namespace TechFluency.Controllers
     {
         private readonly PathStageService _pathStageService;
 
+        public PathStageController(PathStageService pathStageService)
+        {
+            _pathStageService = pathStageService;
+        }
+
         [HttpGet("GetPathStageById")]
         public PathStage GetPathStageById(string id)
         {
