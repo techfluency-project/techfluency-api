@@ -1,9 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TechFluency.Context;
 using TechFluency.DTOs;
+using TechFluency.Models;
 using TechFluency.Repository;
 using static BCrypt.Net.BCrypt;
 
@@ -13,9 +15,12 @@ namespace TechFluency.Services
     {
         private readonly UserRepository _userRepository;
         private readonly IConfiguration _configuration;
-        public JwtService(UserRepository userRepository, IConfiguration configuration) {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public JwtService(UserRepository userRepository, IConfiguration configuration, IHttpContextAccessor httpContextAccessor) {
             _userRepository = userRepository;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
          public async Task<LoginResponseDTO?> Authenticate(LoginRequestDTO loginDTO)
@@ -37,7 +42,8 @@ namespace TechFluency.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Name, loginDTO.Username)
+                    new Claim(JwtRegisteredClaimNames.Name, loginDTO.Username),
+                    new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", userAccount.Id.ToString()),
                 }),
                 Expires = tokenExpiryTimeStamp,
                 Issuer = issuer,
@@ -57,7 +63,12 @@ namespace TechFluency.Services
                 UserName = loginDTO.Username
             };
          }
-      
+        
+        public Task<User> GetCurrentUser()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            return _userRepository.GetUserById(userId);
+        }
 
     }
 }

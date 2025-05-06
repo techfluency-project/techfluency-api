@@ -18,5 +18,8 @@ namespace TechFluency.Models
         [BsonRequired]
         public List<string>? Flashcards { get; set; }
 
+        [BsonElement("dtCreated")]
+        [BsonRepresentation(BsonType.DateTime)]
+        public DateTime? DtCreated { get; set; } = DateTime.UtcNow;
     }
 }

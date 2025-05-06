@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using TechFluency.Enums;
 
 namespace TechFluency.DTOs
 {
@@ -11,7 +12,7 @@ namespace TechFluency.DTOs
         public string? Name { get; set; }
         public string? LastName { get; set; }
         public string? Phone { get; set; }
-        public string? Gender { get; set; }
+        public EnumGender? Gender { get; set; }
         public DateOnly? Birthdate { get; set; }
 
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TechFluency.DTOs;
 using TechFluency.Models;
 using TechFluency.Services;
 
@@ -12,17 +13,22 @@ namespace TechFluency.Controllers
     public class QuestionController : ControllerBase
     {
         private readonly QuestionService _questionService;
+        private readonly JwtService _jwtService;
+        private readonly LevelAdvancementService _levelAdvancementService;
 
-        public QuestionController(QuestionService questionService)
+        public QuestionController(QuestionService questionService, JwtService jwtService,
+            LevelAdvancementService levelAdvancementService)
         {
             _questionService = questionService;
+            _jwtService = jwtService;
+            _levelAdvancementService = levelAdvancementService;
         }
 
-       [HttpGet]
+        [HttpGet("GetAllQuestions")]
        public IEnumerable<Question> GetAllQuestions()
-        {
-            return _questionService.GetAll();
-        }
+       {
+           return _questionService.GetAll();
+       }
 
         [HttpGet("GetQuestionById")]
         public IActionResult GetQuestionById(string id)
@@ -31,6 +37,31 @@ namespace TechFluency.Controllers
             {
                 var question = _questionService.GetQuestionById(id);
                 return Ok(question);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("QuestionAnswer")]
+        public async Task<IActionResult> QuestionAnswer(UserAnswerPathDTO answer)
+        {
+            try
+            {
+                var user = await _jwtService.GetCurrentUser();
+                if (user == null)
+                {
+                    return BadRequest("User has not been found.");
+                }
+                var response = _questionService.AnswerQuestion(answer, user.Id);
+                var changeStage = await _levelAdvancementService.ChangeToNextStage(user.Id);
+
+                if(changeStage) {
+                    response.ChangeToNextStage = true;
+                    return Ok(response); 
+                }
+                return Ok(response);
             }
             catch (Exception ex)
             {

@@ -12,9 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
+    options.AddPolicy("AllowAll",
         policy => policy
-            .WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -29,6 +28,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddScoped(typeof(ITechFluencyRepository<>), typeof(TechFluencyRepository<>));
+
+builder.Services.AddHttpContextAccessor();
 
 // USER PROGRESS
 builder.Services.AddScoped<UserProgresRepository>();
@@ -52,6 +53,13 @@ builder.Services.AddScoped<PathStageService>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<JwtService>();
+
+// BADGE
+builder.Services.AddScoped<BadgeService>();
+builder.Services.AddScoped<BadgeRepository>();
+
+//LEVEL ADVANCEMENT
+builder.Services.AddScoped<LevelAdvancementService>();
 
 // Adds authentication for Swagger requests
 builder.Services.AddSwaggerGen(options =>
@@ -109,12 +117,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
-// desativa o cors
-
-app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 

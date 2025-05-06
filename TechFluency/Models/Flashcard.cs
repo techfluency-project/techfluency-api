@@ -44,5 +44,9 @@ namespace TechFluency.Models
         [BsonElement("flashcardGroupId")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string FlashcardGroupId { get; set; }
+
+        [BsonElement("dtCreated")]
+        [BsonRepresentation(BsonType.DateTime)]
+        public DateTime? DtCreated { get; set; } = DateTime.UtcNow;
     }
 }

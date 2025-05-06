@@ -15,6 +15,11 @@ namespace TechFluency.Services
             _pathStageRepository = pathStageRepository;
         }
 
+        public PathStage GetPathStageById(string pathStageId)
+        {
+            return _pathStageRepository.GetStageById(pathStageId);
+        }
+
         public IEnumerable<string> GetStagesForLearningPath(EnumLevel learningPathLevel, string learningPathId)
         {
             var xpReward = 0;
