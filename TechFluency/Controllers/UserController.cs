@@ -27,14 +27,28 @@ namespace TechFluency.Controllers
 
         [AllowAnonymous]
         [HttpPost("sign-in")]
-        public async Task<ActionResult<LoginResponseDTO>> Login(LoginRequestDTO loginRequest)
+        public async Task<ActionResult<String>> Login(LoginRequestDTO loginRequest)
         {
-            var result = await _jwtService.Authenticate(loginRequest);
-            if (result == null) 
-                return Unauthorized();
+            var token = await _jwtService.Authenticate(loginRequest);
+            if (token != null)
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddHours(1)
+                };
 
-             return result;
+                Response.Cookies.Append("jwt", token, cookieOptions);
+
+                return Ok(new LoginResponseDTO
+                {
+                    Message = "Token enviado como cookie",
+                    AcessToken = token
+                });
+            }
+            return BadRequest();
         }
-
     }
 }

@@ -23,14 +23,14 @@ namespace TechFluency.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-         public async Task<LoginResponseDTO?> Authenticate(LoginRequestDTO loginDTO)
-          {
+        public async Task<String?> Authenticate(LoginRequestDTO loginDTO)
+        {
             if (string.IsNullOrWhiteSpace(loginDTO.Username) || string.IsNullOrWhiteSpace(loginDTO.Password)) return null;
-              
+
             var userAccount = await _userRepository.GetUserByUsername(loginDTO.Username);
             var requestPassword = HashPassword(loginDTO.Password);
             if (userAccount is null || Verify(requestPassword, userAccount.Password))
-                return null;  
+                return null;
 
             var issuer = _configuration["JwtConfig:Issuer"];
             var audience = _configuration["JwtConfig:Audience"];
@@ -56,14 +56,10 @@ namespace TechFluency.Services
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var acessToken = tokenHandler.WriteToken(securityToken);
 
-            return new LoginResponseDTO
-            {
-                AcessToken = acessToken,
-                ExpiresIn = (int)tokenExpiryTimeStamp.Subtract(DateTime.UtcNow).TotalSeconds,
-                UserName = loginDTO.Username
-            };
-         }
-        
+            return acessToken;
+        }
+
+
         public Task<User> GetCurrentUser()
         {
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
