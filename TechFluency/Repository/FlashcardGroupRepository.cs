@@ -11,9 +11,14 @@ namespace TechFluency.Repository
 
         }
 
-        public IEnumerable<FlashcardGroup> GetFlashcardGroup(string userId)
+        public IEnumerable<FlashcardGroup> GetAllFlashcardsGroup(string userId)
         {
             return _collection.AsQueryable().Where(x => x.UserId == userId).ToList();
+        }
+
+        public FlashcardGroup GetFlashcardGroup(string flashCardGroupId)
+        {
+            return _collection.Find(x => x.Id == flashCardGroupId).FirstOrDefault(); 
         }
     }
 }
