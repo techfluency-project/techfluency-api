@@ -61,6 +61,12 @@ builder.Services.AddScoped<BadgeRepository>();
 //LEVEL ADVANCEMENT
 builder.Services.AddScoped<LevelAdvancementService>();
 
+//FLASHCARDS
+builder.Services.AddScoped<FlashcardRepository>();
+builder.Services.AddScoped<FlashcardGroupRepository>();
+builder.Services.AddScoped<FlashcardGroupService>();
+builder.Services.AddScoped<FlashcardService>();
+
 // Adds authentication for Swagger requests
 builder.Services.AddSwaggerGen(options =>
 {

@@ -8,11 +8,11 @@ namespace TechFluency.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserProgress : ControllerBase
+    public class UserProgressController : ControllerBase
     {
         private readonly QuestionService _questionService;
 
-        public UserProgress(QuestionService questionService)
+        public UserProgressController(QuestionService questionService)
         {
             _questionService = questionService;
         }

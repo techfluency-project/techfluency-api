@@ -14,6 +14,10 @@ namespace TechFluency.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; }
 
+        [BsonElement("name")]
+        [BsonRepresentation(BsonType.String)]
+        public string Name { get; set; }
+
         [BsonElement("flashcards")]
         [BsonRequired]
         public List<string>? Flashcards { get; set; }

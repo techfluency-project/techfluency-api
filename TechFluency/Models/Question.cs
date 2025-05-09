@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using TechFluency.DTOs;
 using TechFluency.Enums;
 using TechFluency.Repository;
 
@@ -17,7 +18,7 @@ namespace TechFluency.Models
 
         [BsonElement("questionConversation")]
         [BsonIgnoreIfNull]
-        public List<ConversationLine> QuestionTextConversation { get; set; }
+        public List<ConversationLineDTO> QuestionTextConversation { get; set; }
 
         [BsonElement("level")]
         public EnumLevel Level { get; set; }
