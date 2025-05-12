@@ -7,6 +7,8 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using TechFluency.Models;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.CookiePolicy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,23 +88,18 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Configures authentication and validates token
-builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
+
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
         {
-            var token = context.Request.Cookies["jwt"];
-            if (!string.IsNullOrEmpty(token))
+            var token = context.Request.Cookies.ContainsKey("jwt");
+            if (token)
             {
-                context.Token = token;
+                context.Token = context.Request.Cookies["jwt"];
             }
 
             return Task.CompletedTask;
@@ -120,6 +117,8 @@ builder.Services.AddAuthentication(options =>
     };
 
 });
+
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -130,6 +129,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always
+}
+);
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
