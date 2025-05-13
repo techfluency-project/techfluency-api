@@ -28,9 +28,12 @@ namespace TechFluency.Services
             if (string.IsNullOrWhiteSpace(loginDTO.Username) || string.IsNullOrWhiteSpace(loginDTO.Password)) return null;
 
             var userAccount = await _userRepository.GetUserByUsername(loginDTO.Username);
-            var requestPassword = HashPassword(loginDTO.Password);
-            if (userAccount is null || Verify(requestPassword, userAccount.Password))
-                return null;
+            var isCorrectUserPassword = Verify(loginDTO.Password, userAccount.Password);
+            if (userAccount is null || !isCorrectUserPassword)
+            {
+                throw new UnauthorizedAccessException("Senha incorreta.");
+            }
+                
 
             var issuer = _configuration["JwtConfig:Issuer"];
             var audience = _configuration["JwtConfig:Audience"];

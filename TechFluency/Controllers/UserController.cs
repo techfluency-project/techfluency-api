@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using TechFluency.DTOs;
 using TechFluency.Models;
 using TechFluency.Services;
@@ -20,9 +21,9 @@ namespace TechFluency.Controllers
         }
 
         [HttpPost("sign-up")]
-        public User UserRegistration(UserRegistrationDTO userRequest)
+        public async Task<User> UserRegistration(UserRegistrationDTO userRequest)
         {
-           return _userService.UserRegistration(userRequest);
+           return await _userService.UserRegistration(userRequest);
         }
 
         [AllowAnonymous]
