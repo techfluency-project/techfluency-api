@@ -36,8 +36,8 @@ namespace TechFluency.Controllers
                 var cookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
+                    Secure = false,
+                    SameSite = SameSiteMode.Lax,
                     Expires = DateTime.UtcNow.AddHours(1)
                 };
 
