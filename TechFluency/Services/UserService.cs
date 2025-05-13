@@ -15,8 +15,13 @@ namespace TechFluency.Services
             _userProgresRepository = userProgresRepository;
         }
 
-        public User UserRegistration(UserRegistrationDTO userRequest)
+        public async Task<User> UserRegistration(UserRegistrationDTO userRequest)
         {
+            var userAccount = await _userRepository.GetUserByUsername(userRequest.Username);
+            if(userAccount != null)
+            {
+                throw new Exception($"O username '{userRequest.Username}' já está em uso.");
+            }
             userRequest.Password = HashPassword(userRequest.Password);
             var user = new User
             {
