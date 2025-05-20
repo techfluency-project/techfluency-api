@@ -15,5 +15,10 @@ namespace TechFluency.Repository
         {
             return _collection.Find(x => x.UserId == id).FirstOrDefault();
         }
+
+        public UserProgress GetUserProgressByUserId(string id)
+        {
+            return _collection.Find(x => x.UserId == id).FirstOrDefault();
+        }
     }
 }

@@ -39,6 +39,19 @@ namespace TechFluency.Controllers
             }
         }
 
+        [HttpGet("GetFlashcardGroupById")]
+        public async Task<IActionResult> GetFlashcardGroupById(string id)
+        {
+            try
+            {
+                return Ok(_flashCardGroupService.GetFlashcardGroupById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("GetAllFlashcardsAvailableToReviewByGroupId")]
         public async Task<IActionResult> GetAllFlashcardsAvailableToReviewByGroupId([FromQuery] string groupId)
         {

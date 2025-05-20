@@ -61,10 +61,14 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<BadgeService>();
 builder.Services.AddScoped<BadgeRepository>();
 
-//LEVEL ADVANCEMENT
+// LEVEL ADVANCEMENT
 builder.Services.AddScoped<LevelAdvancementService>();
 
-//FLASHCARDS
+//USER PROGRESS
+builder.Services.AddScoped<ProgressService>();
+builder.Services.AddScoped<UserProgresRepository>();
+
+// FLASHCARDS
 builder.Services.AddScoped<FlashcardRepository>();
 builder.Services.AddScoped<FlashcardGroupRepository>();
 builder.Services.AddScoped<FlashcardGroupService>();

@@ -29,6 +29,11 @@ namespace TechFluency.Services
             }
         }
 
+        public FlashcardGroup GetFlashcardGroupById(string id)
+        {
+            return _flashCardGroupRepository.Get(id);
+        }
+
         public FlashcardGroup CreateFlashcardGroup(string userId, string flashcardGroupName)
         {
             try

@@ -11,10 +11,33 @@ namespace TechFluency.Controllers
     public class UserProgressController : ControllerBase
     {
         private readonly QuestionService _questionService;
+        private readonly ProgressService _userProgressService;
+        private readonly JwtService _jwtService;
 
-        public UserProgressController(QuestionService questionService)
+        public UserProgressController(QuestionService questionService, JwtService jwtService, ProgressService userProgressService)
         {
             _questionService = questionService;
+            _jwtService = jwtService;
+            _userProgressService = userProgressService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserProgressByUser()
+        {
+            try
+            {
+                var user = await _jwtService.GetCurrentUser();
+                if (user == null)
+                {
+                    return BadRequest("User has not been found.");
+                }
+                var userProgress = _userProgressService.GetUserProgressByUserId(user.Id);
+                return Ok(userProgress);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);  
+            }
         }
     }
 }
