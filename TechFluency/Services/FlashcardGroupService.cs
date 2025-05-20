@@ -41,7 +41,7 @@ namespace TechFluency.Services
                 var flashCardGroup = new FlashcardGroup
                 {
                     UserId = userId,
-                    Flashcards = new List<string>(),
+                    Flashcards = new List<FlashcardToGetDTO>(),
                     Name = flashcardGroupName,
                 };
             
@@ -73,7 +73,14 @@ namespace TechFluency.Services
 
                 _flashCardRepository.Add(flashcard);
 
-                flashCardGroup?.Flashcards.Add(flashcard.Id);
+                var flashcardDTO = new FlashcardToGetDTO
+                {
+                    FlashcardID = flashcard.Id,
+                    FrontQuestion = flashcard.QuestionText,
+                    BackAnswer = flashcard.AnswerText
+                };
+
+                flashCardGroup?.Flashcards.Add(flashcardDTO);
                 _flashCardGroupRepository.Update(flashCardGroup.Id, flashCardGroup);
 
                 return flashcard;

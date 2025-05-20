@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using TechFluency.Repository;
+using TechFluency.DTOs;
 
 namespace TechFluency.Models
 {
@@ -20,7 +21,7 @@ namespace TechFluency.Models
 
         [BsonElement("flashcards")]
         [BsonRequired]
-        public List<string>? Flashcards { get; set; }
+        public List<FlashcardToGetDTO>? Flashcards { get; set; }
 
         [BsonElement("dtCreated")]
         [BsonRepresentation(BsonType.DateTime)]
