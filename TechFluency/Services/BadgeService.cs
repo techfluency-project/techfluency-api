@@ -55,6 +55,23 @@ namespace TechFluency.Services
             },
         };
 
+        public Badge GetBadgeById(string id)
+        {
+            try
+            {
+                var badge = _badgeRepository.GetBadgeById(id);
+                if(badge != null)
+                    return badge;
+
+                return null;
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public void CheckBadgeAchievement(UserProgress userProgress)
         {
             var needToUpdate = false;

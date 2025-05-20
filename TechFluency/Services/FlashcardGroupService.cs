@@ -84,5 +84,22 @@ namespace TechFluency.Services
             }
         }
 
+        public void DeleteFlashCardGroup(string id)
+        {
+            try
+            {
+                var flashcardToDelete = GetFlashcardGroupById(id);
+                if (flashcardToDelete != null)
+                {
+                    _flashCardGroupRepository.Delete(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
     }
 }

@@ -84,5 +84,20 @@ namespace TechFluency.Services
             _flashCardRepository.Update(flashcard.Id, flashcard);
         }
 
+        public void DeleteFlashCard(string id)
+        {
+            try
+            {
+                var flashcardToDelete = GetFlashcardById(id);
+                if (flashcardToDelete != null)
+                {
+                    _flashCardRepository.Delete(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

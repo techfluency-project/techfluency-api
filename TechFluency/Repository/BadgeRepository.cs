@@ -11,6 +11,11 @@ namespace TechFluency.Repository
 
         }
 
+        public Badge GetBadgeById(string id)
+        {
+            return _collection.Find(x => x.Id == id).FirstOrDefault();
+        }
+
         public string GetBagdeIdByTitle(string title)
         {
             return _collection

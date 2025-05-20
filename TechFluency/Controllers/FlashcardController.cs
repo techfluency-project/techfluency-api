@@ -122,5 +122,33 @@ namespace TechFluency.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("DeleteFlashcardGroup")] 
+        public IActionResult DeleteFlashcardGroup(string id)
+        {
+            try
+            {
+                _flashCardGroupService.DeleteFlashCardGroup(id);
+                return NoContent();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteFlashcard")]
+        public IActionResult DeleteFlashcard(string id)
+        {
+            try
+            {
+                _flashCardService.DeleteFlashCard(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
