@@ -51,5 +51,12 @@ namespace TechFluency.Controllers
             }
             return BadRequest();
         }
+
+        [HttpPost("sign-off")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt");
+            return Ok(new { message = "Logout realizado com sucesso." });
+        }
     }
 }
