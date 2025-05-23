@@ -58,5 +58,12 @@ namespace TechFluency.Controllers
             Response.Cookies.Delete("jwt");
             return Ok(new { message = "Logout realizado com sucesso." });
         }
+
+        [HttpPut("update-profile")]
+        public async Task<UserDTO> UpdateMyProfile(UserDTO profileUpdate)
+        {
+            var user = await _jwtService.GetCurrentUser();
+            return  _userService.UpdateMyProfile(user, profileUpdate);
+        }
     }
 }

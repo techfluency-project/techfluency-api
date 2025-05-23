@@ -1,4 +1,5 @@
-﻿using TechFluency.DTOs;
+﻿using System.Xml.Linq;
+using TechFluency.DTOs;
 using TechFluency.Models;
 using TechFluency.Repository;
 using static BCrypt.Net.BCrypt;
@@ -9,7 +10,7 @@ namespace TechFluency.Services
     {
         private readonly UserRepository _userRepository;
         private readonly UserProgresRepository _userProgresRepository;
-       
+
         public UserService(UserRepository userRepository, UserProgresRepository userProgresRepository) {
             _userRepository = userRepository;
             _userProgresRepository = userProgresRepository;
@@ -28,13 +29,10 @@ namespace TechFluency.Services
                 Username = userRequest.Username,
                 Password = userRequest.Password,
                 Name = userRequest.Name,
-                LastName = userRequest.LastName,
                 Email = userRequest.Email,
-                Gender = userRequest.Gender,
-                Birthdate = userRequest.Birthdate,
                 Phone = userRequest.Phone
             };
-            
+
             _userRepository.Add(user);
 
             var userProgress = new UserProgress()
@@ -42,14 +40,26 @@ namespace TechFluency.Services
                 UserId = user.Id,
             };
             _userProgresRepository.Add(userProgress);
+            return await GetUserById(user.Id);
+        }
 
-            
-            return _userRepository.Get(user.Id);
-        } 
 
-        public void GetUserById(string id)
+        public async Task<User> GetUserById(string id)
         {
-            _userRepository.GetUserById(id);
+           return await _userRepository.GetUserById(id);
+        }
+
+        public UserDTO UpdateMyProfile(User user,UserDTO profileUpdate)
+        {
+
+            user.Username = profileUpdate.Username;
+            user.Email = profileUpdate.Email;
+            user.Name = profileUpdate.Name;
+            user.Phone = profileUpdate.Phone;
+
+            _userRepository.Update(user.Id, user);
+
+            return profileUpdate;
         }
     }
 }
