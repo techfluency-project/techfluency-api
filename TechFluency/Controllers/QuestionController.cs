@@ -50,10 +50,7 @@ namespace TechFluency.Controllers
             try
             {
                 var user = await _jwtService.GetCurrentUser();
-                if (user == null)
-                {
-                    return BadRequest("User has not been found.");
-                }
+            
                 var response = _questionService.AnswerQuestion(answer, user.Id);
                 var changeStage = await _levelAdvancementService.ChangeToNextStage(user.Id);
 

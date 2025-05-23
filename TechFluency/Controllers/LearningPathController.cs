@@ -28,10 +28,7 @@ namespace TechFluency.Controllers
             try
             {
                 var user = await _jwtService.GetCurrentUser();
-                if(user == null)
-                {
-                    return BadRequest("User has not been found.");
-                }
+                
                 await _learningPathService.MountingLearningPath(user.Id);
                 return Ok(new { message = "Trilha montada com sucesso!" });
             }
@@ -47,10 +44,7 @@ namespace TechFluency.Controllers
             try
             {
                 var user = await _jwtService.GetCurrentUser();
-                if (user == null)
-                {
-                    return BadRequest("User has not been found.");
-                }
+              
                 var learningPath = _learningPathService.GetLearningPath(user.Id);
                 return Ok(learningPath);
             }
