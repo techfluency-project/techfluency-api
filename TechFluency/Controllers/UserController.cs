@@ -20,6 +20,14 @@ namespace TechFluency.Controllers
             _jwtService = jwtService;
         }
 
+        [AllowAnonymous]
+        [HttpGet("my-profile")]
+        public async Task<UserDTO> GetMyProfile()
+        {
+            var user = await _jwtService.GetCurrentUser();
+            return await _userService.GetMyProfile(user.Id);
+        }
+
         [HttpPost("sign-up")]
         public async Task<User> UserRegistration(UserRegistrationDTO userRequest)
         {

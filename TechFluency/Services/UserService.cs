@@ -15,6 +15,18 @@ namespace TechFluency.Services
             _userRepository = userRepository;
             _userProgresRepository = userProgresRepository;
         }
+        public async Task<UserDTO> GetMyProfile(String userId)
+        {
+            var user = await GetUserById(userId);
+            var userDTO = new UserDTO
+            {
+                Username = user.Username,
+                Name = user.Name,
+                Email = user.Email,
+                Phone = user.Phone
+            };
+            return userDTO;
+        }
 
         public async Task<User> UserRegistration(UserRegistrationDTO userRequest)
         {
@@ -51,7 +63,6 @@ namespace TechFluency.Services
 
         public UserDTO UpdateMyProfile(User user,UserDTO profileUpdate)
         {
-
             user.Username = profileUpdate.Username;
             user.Email = profileUpdate.Email;
             user.Name = profileUpdate.Name;
