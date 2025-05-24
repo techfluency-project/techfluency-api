@@ -61,16 +61,26 @@ namespace TechFluency.Services
            return await _userRepository.GetUserById(id);
         }
 
-        public UserDTO UpdateMyProfile(User user,UserDTO profileUpdate)
+        public async Task<UserDTO> UpdateMyProfile(User user,UserDTO profileUpdate)
         {
-            user.Username = profileUpdate.Username;
-            user.Email = profileUpdate.Email;
-            user.Name = profileUpdate.Name;
-            user.Phone = profileUpdate.Phone;
+            user.Username = profileUpdate.Username ?? user.Username;
+            user.Email = profileUpdate.Email ?? user.Email;
+            user.Name = profileUpdate.Name ?? user.Name;
+            user.Phone = profileUpdate.Phone ?? user.Phone;
 
             _userRepository.Update(user.Id, user);
 
-            return profileUpdate;
+            var userUpdate = await GetUserById(user.Id);
+
+            var result = new UserDTO
+            {
+                Name = userUpdate.Name,
+                Email = userUpdate.Email,
+                Username = userUpdate.Username,
+                Phone = userUpdate.Phone
+            };
+
+            return result;
         }
     }
 }

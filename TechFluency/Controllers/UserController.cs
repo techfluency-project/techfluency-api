@@ -71,7 +71,7 @@ namespace TechFluency.Controllers
         public async Task<UserDTO> UpdateMyProfile(UserDTO profileUpdate)
         {
             var user = await _jwtService.GetCurrentUser();
-            return  _userService.UpdateMyProfile(user, profileUpdate);
+            return  await _userService.UpdateMyProfile(user, profileUpdate);
         }
     }
 }
