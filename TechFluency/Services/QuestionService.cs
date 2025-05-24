@@ -45,7 +45,7 @@ namespace TechFluency.Services
             return randomQuestions;
         }
 
-        public UserAnswerResultDTO AnswerQuestion(List<UserAnswerPathDTO> answers, string userId)
+        public UserAnswerResultDTO AnswerQuestion(UserAnswerPathDTO answers, string userId)
         {
             var options = new ParallelOptions() { MaxDegreeOfParallelism = 4 };
 
@@ -58,14 +58,12 @@ namespace TechFluency.Services
 
             object lockObj = new();
 
-            var allAnswers = answers
-                .SelectMany(stage => stage.Answers.Select(answer => new
-                {
-                    Answer = answer,
-                    PathStageId = stage.PathStageId
-                }))
-                .ToList();
-
+            var allAnswers = answers.Answers.Select(answer => new
+            {
+                Answer = answer,
+                PathStageId = answers.PathStageId,
+            }).ToList();
+               
             Parallel.ForEach(allAnswers, options, entry =>
             {
                 var question = GetQuestionById(entry.Answer.QuestionId);

@@ -13,6 +13,8 @@ namespace TechFluency.Models
 
         [BsonElement("userId")]
         public string UserId { get; set; }
+        public string Username { get; set; }
+        public string Name { get; set; }
 
         [BsonElement("level")]
         public EnumLevel Level { get; set; }

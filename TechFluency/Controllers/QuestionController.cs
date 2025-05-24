@@ -45,7 +45,7 @@ namespace TechFluency.Controllers
         }
 
         [HttpPost("QuestionAnswer")]
-        public async Task<IActionResult> QuestionAnswer(List<UserAnswerPathDTO> answers)
+        public async Task<IActionResult> QuestionAnswer(UserAnswerPathDTO answers)
         {
             try
             {

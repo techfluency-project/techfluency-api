@@ -51,6 +51,8 @@ namespace TechFluency.Services
             var userProgress = new UserProgress()
             {
                 UserId = user.Id,
+                Username = user.Username,
+                Name = user.Name
             };
             _userProgresRepository.Add(userProgress);
             return await GetUserById(user.Id);
