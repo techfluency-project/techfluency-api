@@ -46,7 +46,7 @@ namespace TechFluency.Controllers
                     HttpOnly = true,
                     Secure = false,
                     SameSite = SameSiteMode.Lax,
-                    Expires = DateTime.UtcNow.AddHours(1)
+                    Expires = DateTime.UtcNow.AddHours(24)
                 };
 
                 Response.Cookies.Append("jwt", token, cookieOptions);
