@@ -30,20 +30,9 @@ namespace TechFluency.Models
         [BsonRepresentation(BsonType.String)]
         public string? Name { get; set; }
 
-        [BsonElement("lastname")]
-        [BsonRepresentation(BsonType.String)]
-        public string? LastName { get; set; }
-
         [BsonElement("phone")]
         [BsonRepresentation(BsonType.String)]
         public string? Phone { get; set; }
-        
-        [BsonElement("gender")]
-        public EnumGender? Gender { get; set; }
-
-        [BsonElement("birthdate")]
-        [BsonRepresentation(BsonType.DateTime)]
-        public DateOnly? Birthdate { get; set; }
 
         [BsonElement("dtCreated")]
         [BsonRepresentation(BsonType.DateTime)]

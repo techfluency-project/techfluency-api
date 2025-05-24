@@ -27,10 +27,7 @@ namespace TechFluency.Controllers
             try
             {
                 var user = await _jwtService.GetCurrentUser();
-                if (user == null)
-                {
-                    return BadRequest("User has not been found.");
-                }
+            
                 return Ok(_flashCardGroupService.GetAllFlashcardsGroup(user.Id));
             }
             catch (Exception ex)
@@ -72,10 +69,7 @@ namespace TechFluency.Controllers
             try
             {
                 var user = await _jwtService.GetCurrentUser();
-                if (user == null)
-                {
-                    return BadRequest("User has not been found.");
-                }
+               
                 if (flashCardDTO.Name == null)
                 {
                     return BadRequest("Flashcard Group needs a Name");

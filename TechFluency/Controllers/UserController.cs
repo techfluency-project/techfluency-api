@@ -20,6 +20,14 @@ namespace TechFluency.Controllers
             _jwtService = jwtService;
         }
 
+        [AllowAnonymous]
+        [HttpGet("my-profile")]
+        public async Task<UserDTO> GetMyProfile()
+        {
+            var user = await _jwtService.GetCurrentUser();
+            return await _userService.GetMyProfile(user.Id);
+        }
+
         [HttpPost("sign-up")]
         public async Task<User> UserRegistration(UserRegistrationDTO userRequest)
         {
@@ -57,6 +65,13 @@ namespace TechFluency.Controllers
         {
             Response.Cookies.Delete("jwt");
             return Ok(new { message = "Logout realizado com sucesso." });
+        }
+
+        [HttpPut("update-profile")]
+        public async Task<UserDTO> UpdateMyProfile(UserDTO profileUpdate)
+        {
+            var user = await _jwtService.GetCurrentUser();
+            return  await _userService.UpdateMyProfile(user, profileUpdate);
         }
 
         [HttpPost("ResetPassword")]

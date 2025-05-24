@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TechFluency.DTOs;
+using TechFluency.Exceptions;
 using TechFluency.Models;
 using TechFluency.Repository;
 using static BCrypt.Net.BCrypt;
@@ -64,7 +65,13 @@ namespace TechFluency.Services
         public Task<User> GetCurrentUser()
         {
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
-            return _userRepository.GetUserById(userId);
+            var user = _userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            return user;
         }
 
     }
