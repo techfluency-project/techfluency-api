@@ -45,13 +45,13 @@ namespace TechFluency.Controllers
         }
 
         [HttpPost("QuestionAnswer")]
-        public async Task<IActionResult> QuestionAnswer(UserAnswerPathDTO answer)
+        public async Task<IActionResult> QuestionAnswer(List<UserAnswerPathDTO> answers)
         {
             try
             {
                 var user = await _jwtService.GetCurrentUser();
             
-                var response = _questionService.AnswerQuestion(answer, user.Id);
+                var response = _questionService.AnswerQuestion(answers, user.Id);
                 var changeStage = await _levelAdvancementService.ChangeToNextStage(user.Id);
 
                 if(changeStage) {

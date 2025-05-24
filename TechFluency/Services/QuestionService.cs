@@ -45,101 +45,111 @@ namespace TechFluency.Services
             return randomQuestions;
         }
 
-        public UserAnswerResultDTO AnswerQuestion(UserAnswerPathDTO answer, string userId)
+        public UserAnswerResultDTO AnswerQuestion(List<UserAnswerPathDTO> answers, string userId)
         {
-            var question = GetQuestionById(answer.QuestionId);
-            var userProgress = _userProgresRepository.GetUserProgress(userId);
-            var pathStage = _pathStageRepository.GetStageById(answer.PathStageId);
+            var options = new ParallelOptions() { MaxDegreeOfParallelism = 4 };
 
+            int totalQuestions = 0;
+            int totalCorrect = 0;
+
+            var userProgress = _userProgresRepository.GetUserProgress(userId);
             userProgress.Activities ??= new List<ActivityProgress>();
             userProgress.StageProgresses ??= new List<StageProgress>();
 
-            var existingActivity = userProgress.Activities
-                .FirstOrDefault(x => x.Topic == question.Topic && x.Type == question.Type);
+            var answersLock = new object();
 
-            if (existingActivity == null)
+            Parallel.ForEach(answers, options, answer =>
             {
-                existingActivity = new ActivityProgress
+                var question = GetQuestionById(answer.QuestionId);
+                var pathStage = _pathStageRepository.GetStageById(answer.PathStageId);
+
+                bool isCorrect = question.CorrectAnswer == answer.SelectedOption;
+
+                lock (answersLock)
                 {
-                    Topic = question.Topic,
-                    Type = question.Type,
-                    TotalCompleted = 0,
-                    TotalCorrect = 0
-                };
-                userProgress.Activities.Add(existingActivity);
-            }
-
-            existingActivity.TotalCompleted++;
-
-            bool isCorrect = question.CorrectAnswer == answer.SelectedOption;
-            if (isCorrect)
-            {
-                existingActivity.TotalCorrect++;
-                _badgeService.CheckBadgeAchievement(userProgress);
-            }
-
-            var stageProgress = userProgress.StageProgresses
-                .FirstOrDefault(s => s.StageId == pathStage.Id);
-
-            if (stageProgress == null)
-            {
-                stageProgress = new StageProgress
-                {
-                    StageId = pathStage.Id,
-                    TotalAnswered = 0,
-                    TotalCorrect = 0
-                };
-                userProgress.StageProgresses.Add(stageProgress);
-            }
-
-            if (!stageProgress.IsCompleted && stageProgress.HasFailed)
-            {
-                stageProgress.TotalAnswered = 0;
-                stageProgress.TotalCorrect = 0;
-                stageProgress.HasFailed = false;
-            }
-
-            stageProgress.TotalAnswered++;
-            if (isCorrect)
-                stageProgress.TotalCorrect++;
-
-            _userProgresRepository.Update(userProgress.Id, userProgress);
-
-            bool stageCompleted = stageProgress.IsCompleted;
-            bool stageFailed = false;
-
-
-            if (!stageCompleted && stageProgress.TotalAnswered >= pathStage.Questions.Count())
-            {
-                double accuracy = (double)stageProgress.TotalCorrect / stageProgress.TotalAnswered;
-                if (accuracy >= 0.7)
-                {
-                    userProgress.TotalXP += pathStage.XpReward;
-                    pathStage.IsCompleted = true;
-                    stageCompleted = pathStage.IsCompleted;
-                    stageProgress.IsCompleted = true;
-                    _pathStageRepository.Update(pathStage.Id, pathStage);
+                    totalQuestions++;
+                    if (isCorrect) totalCorrect++;
                 }
-                else
-                {
-                    stageFailed = true;
-                    stageProgress.HasFailed = true;
-                }
-            }
-           
-            _userProgresRepository.Update(userProgress.Id, userProgress);
 
-            return new UserAnswerResultDTO
+                lock (userProgress.Activities)
+                {
+                    var existingActivity = userProgress.Activities
+                        .FirstOrDefault(x => x.Topic == question.Topic && x.Type == question.Type);
+
+                    if (existingActivity == null)
+                    {
+                        existingActivity = new ActivityProgress
+                        {
+                            Topic = question.Topic,
+                            Type = question.Type,
+                            TotalCompleted = 0,
+                            TotalCorrect = 0
+                        };
+                        userProgress.Activities.Add(existingActivity);
+                    }
+
+                    existingActivity.TotalCompleted++;
+                    if (isCorrect)
+                    {
+                        existingActivity.TotalCorrect++;
+                        _badgeService.CheckBadgeAchievement(userProgress);
+                    }
+                }
+
+                lock (userProgress.StageProgresses)
+                {
+                    var stageProgress = userProgress.StageProgresses
+                        .FirstOrDefault(s => s.StageId == pathStage.Id);
+
+                    if (stageProgress == null)
+                    {
+                        stageProgress = new StageProgress
+                        {
+                            StageId = pathStage.Id,
+                            TotalAnswered = 0,
+                            TotalCorrect = 0
+                        };
+                        userProgress.StageProgresses.Add(stageProgress);
+                    }
+
+                    if (!stageProgress.IsCompleted && stageProgress.HasFailed)
+                    {
+                        stageProgress.TotalAnswered = 0;
+                        stageProgress.TotalCorrect = 0;
+                        stageProgress.HasFailed = false;
+                    }
+
+                    stageProgress.TotalAnswered++;
+                    if (isCorrect)
+                        stageProgress.TotalCorrect++;
+
+                    if (!stageProgress.IsCompleted && stageProgress.TotalAnswered >= pathStage.Questions.Count())
+                    {
+                        double accuracy = (double)stageProgress.TotalCorrect / stageProgress.TotalAnswered;
+                        if (accuracy >= 0.7)
+                        {
+                            userProgress.TotalXP += pathStage.XpReward;
+                            pathStage.IsCompleted = true;
+                            stageProgress.IsCompleted = true;
+                            _pathStageRepository.Update(pathStage.Id, pathStage);
+                        }
+                        else
+                        {
+                            stageProgress.HasFailed = true;
+                        }
+                    }
+                }
+
+                _userProgresRepository.Update(userProgress.Id, userProgress);
+            });
+
+            return new UserAnswerResultDTO()
             {
-                IsCorrect = isCorrect,
-                QuestionID = question.Id,
-                StageCompleted = stageCompleted,
-                StageAnswered = stageProgress.TotalAnswered,
-                StageCorrect = stageProgress.TotalCorrect,
-                StageFailed = stageFailed
+                Percentage = totalQuestions == 0 ? 0 : (double)totalCorrect / totalQuestions
             };
 
         }
+
 
 
     }
