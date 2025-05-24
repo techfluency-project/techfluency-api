@@ -40,10 +40,7 @@ namespace TechFluency.Controllers
             try
             {
                 var user = await _jwtService.GetCurrentUser();
-                if (user == null)
-                {
-                    return BadRequest("User has not been found.");
-                }
+              
                 var result = _placementTestService.GetResultFromPlacementTest(userAnswers, user.Id);
                 return Ok(new {message = "Resultado gerado com sucesso", level = result});
             }
