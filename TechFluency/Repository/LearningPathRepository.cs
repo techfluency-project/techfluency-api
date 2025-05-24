@@ -13,9 +13,9 @@ namespace TechFluency.Repository
             
         }
 
-        public LearningPath GetLearningPath(string id)
+        public List<LearningPath> GetLearningPath(string userId)
         {
-            return _collection.Find(x => x.Id == id).FirstOrDefault();
+            return _collection.AsQueryable().Where(x => x.UserId == userId).ToList();
         }
     }
 }

@@ -85,15 +85,15 @@ namespace TechFluency.Services
                 {
                     if (activity.TotalCorrect == goal)
                     {
-                        var badgeId = _badgeRepository.GetBagdeIdByTitle(badgeTitle);
+                        var badge = _badgeRepository.GetBagdeByTitle(badgeTitle);
 
                         if (userProgress.Badges == null)
-                            userProgress.Badges = new List<string>();
+                            userProgress.Badges = new List<Badge>();
 
-                        if(userProgress.Badges.Contains(badgeId))
+                        if(userProgress.Badges.Any(x => x.Id == badge.Id))
                             break;
 
-                        userProgress.Badges.Add(badgeId);
+                        userProgress.Badges.Add(badge);
                         needToUpdate = true;
                     }
                 }

@@ -114,10 +114,11 @@ namespace TechFluency.Services
                 double accuracy = (double)stageProgress.TotalCorrect / stageProgress.TotalAnswered;
                 if (accuracy >= 0.7)
                 {
-                    
-                    _pathStageRepository.Update(pathStage.Id, pathStage);
-                    stageProgress.IsCompleted = true;
+                    userProgress.TotalXP += pathStage.XpReward;
                     pathStage.IsCompleted = true;
+                    stageCompleted = pathStage.IsCompleted;
+                    stageProgress.IsCompleted = true;
+                    _pathStageRepository.Update(pathStage.Id, pathStage);
                 }
                 else
                 {

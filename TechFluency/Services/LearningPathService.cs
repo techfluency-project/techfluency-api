@@ -50,10 +50,9 @@ namespace TechFluency.Services
             }
         }
 
-        public async Task<LearningPath> GetLearningPath(string userId)
+        public List<LearningPath> GetLearningPath(string userId)
         {
-            var userProgress = _userProgressRepository.GetUserProgress(userId);
-            return _learningPathRepository.GetLearningPath(userProgress.LearningPathId);
+            return _learningPathRepository.GetLearningPath(userId);
         }
 
         private LearningPath CreateLearningPath(string userId, EnumLevel level)

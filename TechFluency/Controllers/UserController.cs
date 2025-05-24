@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using TechFluency.DTOs;
 using TechFluency.Models;
 using TechFluency.Services;
+using static BCrypt.Net.BCrypt;
 
 namespace TechFluency.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
-    public class UserController: ControllerBase
+
+    public class UserController : ControllerBase
     {
         private readonly UserService _userService;
         private readonly JwtService _jwtService;
@@ -23,7 +23,7 @@ namespace TechFluency.Controllers
         [HttpPost("sign-up")]
         public async Task<User> UserRegistration(UserRegistrationDTO userRequest)
         {
-           return await _userService.UserRegistration(userRequest);
+            return await _userService.UserRegistration(userRequest);
         }
 
         [AllowAnonymous]
@@ -58,5 +58,34 @@ namespace TechFluency.Controllers
             Response.Cookies.Delete("jwt");
             return Ok(new { message = "Logout realizado com sucesso." });
         }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDTO resetPasswordDTO)
+        {
+            try
+            {
+                var user = await _jwtService.GetCurrentUser();
+                if (user == null)
+                {
+                    return BadRequest("User has not been found.");
+                }
+
+                if (Verify(resetPasswordDTO.CurrentPassword, user.Password))
+                {
+                    var success = await _userService.ResetPassword(user.Id, resetPasswordDTO);
+                    if(success)
+                        return Ok("Changes made successfully!");
+
+                    return BadRequest("Passwords do not match. Error.");
+                }
+
+                return BadRequest("Changes not made. Error.");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

@@ -16,11 +16,10 @@ namespace TechFluency.Repository
             return _collection.Find(x => x.Id == id).FirstOrDefault();
         }
 
-        public string GetBagdeIdByTitle(string title)
+        public Badge GetBagdeByTitle(string title)
         {
             return _collection
                 .Find(x => x.Title == title)
-                .Project(x => x.Id)
                 .FirstOrDefault();
         }
     }

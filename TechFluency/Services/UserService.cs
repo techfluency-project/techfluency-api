@@ -1,4 +1,5 @@
-﻿using TechFluency.DTOs;
+﻿using TechFluency.Controllers;
+using TechFluency.DTOs;
 using TechFluency.Models;
 using TechFluency.Repository;
 using static BCrypt.Net.BCrypt;
@@ -50,6 +51,28 @@ namespace TechFluency.Services
         public void GetUserById(string id)
         {
             _userRepository.GetUserById(id);
+        }
+
+        public async Task<bool> ResetPassword(string userId, ResetPasswordDTO resetPasswordDTO)
+        {
+            var user = await _userRepository.GetUserById(userId);
+            if (string.IsNullOrWhiteSpace(resetPasswordDTO.NewPassword) || string.IsNullOrWhiteSpace(resetPasswordDTO.ConfirmPassword))
+            {
+                return false;
+                throw new ArgumentException("Password fields cannot be null or whitespace.");
+            }
+
+            if (resetPasswordDTO.NewPassword == resetPasswordDTO.ConfirmPassword)
+            {
+                user.Password = HashPassword(resetPasswordDTO.ConfirmPassword);
+                _userRepository.Update(userId, user);
+                return true;
+            }
+            else
+            {
+                return false;
+                throw new ArgumentException("Passwords do not match.");
+            }
         }
     }
 }
