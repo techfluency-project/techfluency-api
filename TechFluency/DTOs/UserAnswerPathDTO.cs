@@ -2,8 +2,8 @@
 {
     public class UserAnswerPathDTO
     {
-        public string QuestionId { get; set; }
-        public string SelectedOption { get; set; }
         public string PathStageId { get; set; }
+
+        public List<UserAnswerDTO> Answers { get; set; }
     }
 }

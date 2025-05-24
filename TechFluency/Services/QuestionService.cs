@@ -56,16 +56,23 @@ namespace TechFluency.Services
             userProgress.Activities ??= new List<ActivityProgress>();
             userProgress.StageProgresses ??= new List<StageProgress>();
 
-            var answersLock = new object();
+            object lockObj = new();
 
-            Parallel.ForEach(answers, options, answer =>
+            var allAnswers = answers
+                .SelectMany(stage => stage.Answers.Select(answer => new
+                {
+                    Answer = answer,
+                    PathStageId = stage.PathStageId
+                }))
+                .ToList();
+
+            Parallel.ForEach(allAnswers, options, entry =>
             {
-                var question = GetQuestionById(answer.QuestionId);
-                var pathStage = _pathStageRepository.GetStageById(answer.PathStageId);
+                var question = GetQuestionById(entry.Answer.QuestionId);
+                var pathStage = _pathStageRepository.GetStageById(entry.PathStageId);
+                bool isCorrect = question.CorrectAnswer == entry.Answer.SelectedOption;
 
-                bool isCorrect = question.CorrectAnswer == answer.SelectedOption;
-
-                lock (answersLock)
+                lock (lockObj)
                 {
                     totalQuestions++;
                     if (isCorrect) totalCorrect++;
@@ -149,8 +156,6 @@ namespace TechFluency.Services
             };
 
         }
-
-
 
     }
 }
