@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
             .WithOrigins("http://localhost:8081", "http://localhost:3000") // <-- Add other mobile dev URLs if needed
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowCredentials());
 });
 
 
