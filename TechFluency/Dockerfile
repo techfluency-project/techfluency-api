@@ -1,22 +1,24 @@
-﻿# Etapa 1: Build da aplicação
+# Etapa 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-# Copia os arquivos do projeto e restaura as dependências
-COPY *.csproj ./
-RUN dotnet restore
+# Copiar csproj e restaurar depend�ncias
+COPY TechFluency.csproj ./
+RUN dotnet restore "./TechFluency.csproj"
 
-# Copia tudo e faz o build em modo Release
+# Copiar tudo e fazer o build
 COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish "./TechFluency.csproj" -c Release -o /app/publish
 
-# Etapa 2: Runtime da aplicação
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+# Etapa 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS final
 WORKDIR /app
-COPY --from=build /app/out .
 
-# Porta padrão para ASP.NET Core
+# Setar a URL para ouvir na porta do Render
+ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT}
+
+COPY --from=build /app/publish .
+
 EXPOSE 80
 
-# Comando de execução
 ENTRYPOINT ["dotnet", "TechFluency.dll"]
