@@ -66,12 +66,20 @@ namespace TechFluency.Services
 
         public async Task<UserDTO> UpdateMyProfile(User user,UserDTO profileUpdate)
         {
+            var userProgress = _userProgresRepository.GetUserProgress(user.Id);
+
             user.Username = profileUpdate.Username ?? user.Username;
             user.Email = profileUpdate.Email ?? user.Email;
             user.Name = profileUpdate.Name ?? user.Name;
             user.Phone = profileUpdate.Phone ?? user.Phone;
 
             _userRepository.Update(user.Id, user);
+
+            if(profileUpdate.Username != null)
+                _userProgresRepository.UpdateField(userProgress.Id, "Username", profileUpdate.Username);
+
+            if(profileUpdate.Name != null)
+                _userProgresRepository.UpdateField(userProgress.Id, "Name", profileUpdate.Name);
 
             var userUpdate = await GetUserById(user.Id);
 

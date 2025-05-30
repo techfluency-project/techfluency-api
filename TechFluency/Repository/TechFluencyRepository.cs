@@ -78,5 +78,26 @@ namespace TechFluency.Repository
             }
         }
 
+        public void UpdateField(string id, string fieldName, object newValue)
+        {
+            try
+            {
+                var filter = Builders<T>.Filter.Eq(x => x.Id, id);
+                var update = Builders<T>.Update.Set(fieldName, newValue);
+
+                var result = _collection.UpdateOne(filter, update);
+
+                if (result.MatchedCount == 0)
+                {
+                    Console.WriteLine("Nenhum documento encontrado com o ID fornecido.");
+                }
+            }
+            catch (MongoException ex)
+            {
+                Console.WriteLine($"Erro ao atualizar o campo do documento: {ex.Message}");
+            }
+        }
+
+
     }
 }
