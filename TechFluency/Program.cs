@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
         policy => policy
-            .WithOrigins("http://localhost:8081", "http://localhost:3000") // <-- Add other mobile dev URLs if needed
+            .WithOrigins("http://localhost:8081", "http://localhost:3000", "https://43c1-2804-14d-5492-84df-00-f9f3.ngrok-free.app") // <-- Add other mobile dev URLs if needed
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -144,10 +144,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseCookiePolicy(new CookiePolicyOptions
 {
-    MinimumSameSitePolicy = SameSiteMode.Strict,
-    HttpOnly = HttpOnlyPolicy.Always
-}
-);
+    MinimumSameSitePolicy = SameSiteMode.None,
+    HttpOnly = HttpOnlyPolicy.Always,
+});
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
