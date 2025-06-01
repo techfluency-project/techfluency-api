@@ -20,5 +20,10 @@ namespace TechFluency.Repository
         {
             return _collection.AsQueryable().Where(x => x.FlashcardGroupId == groupId); 
         }
+
+        public IEnumerable<Flashcard> GetAllFlashcardsByGroup(string flashcardGroupId)
+        {
+            return _collection.AsQueryable().Where(x => x.FlashcardGroupId == flashcardGroupId);
+        }
     }
 }

@@ -11,15 +11,18 @@ namespace TechFluency.Services
     public class FlashcardService
     {
         private readonly FlashcardRepository _flashCardRepository;
+        private readonly FlashcardGroupRepository _flashCardGroupRepository;
 
-        public FlashcardService(FlashcardRepository flashCardRepository)
+        public FlashcardService(FlashcardRepository flashCardRepository, FlashcardGroupRepository flashCardGroupRepository)
         {
             _flashCardRepository = flashCardRepository;
+            _flashCardGroupRepository = flashCardGroupRepository;
         }
 
         public Flashcard GetFlashcardById(string flashcardId)
         {
             var flashcard = _flashCardRepository.GetFlashcardById(flashcardId);
+
             if(flashcard == null)
             {
                 throw new ArgumentException("Flashcard do not exists.");
@@ -89,9 +92,14 @@ namespace TechFluency.Services
             try
             {
                 var flashcardToDelete = GetFlashcardById(id);
+
                 if (flashcardToDelete != null)
                 {
+                    var flashCardGroup = _flashCardGroupRepository.GetFlashcardGroup(flashcardToDelete.FlashcardGroupId);
+                    var groupWithoutFlashcard = flashCardGroup.Flashcards.Where(x => x.FlashcardID != flashcardToDelete.Id).ToList();
+                    flashCardGroup.Flashcards = groupWithoutFlashcard;
                     _flashCardRepository.Delete(id);
+                    _flashCardGroupRepository.Update(flashCardGroup.Id, flashCardGroup);
                 }
             }
             catch (Exception ex)

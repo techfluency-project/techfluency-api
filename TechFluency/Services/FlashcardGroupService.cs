@@ -31,7 +31,12 @@ namespace TechFluency.Services
 
         public FlashcardGroup GetFlashcardGroupById(string id)
         {
-            return _flashCardGroupRepository.Get(id);
+            var flashCardGroup = _flashCardGroupRepository.Get(id);
+            if (flashCardGroup == null)
+            {
+                throw new ArgumentException("FlashcardGroup do not exists.");
+            }
+            return flashCardGroup;
         }
 
         public FlashcardGroup CreateFlashcardGroup(string userId, string flashcardGroupName)
@@ -95,9 +100,16 @@ namespace TechFluency.Services
         {
             try
             {
-                var flashcardToDelete = GetFlashcardGroupById(id);
-                if (flashcardToDelete != null)
+                var options = new ParallelOptions() { MaxDegreeOfParallelism = 4 };
+                var flashcardGroupToDelete = GetFlashcardGroupById(id);
+
+                if (flashcardGroupToDelete != null)
                 {
+                    var allFlashcardsByGroup = _flashCardRepository.GetAllFlashcardsByGroup(flashcardGroupToDelete.Id);
+                    Parallel.ForEach(allFlashcardsByGroup, options, flashcard =>
+                    {
+                        _flashCardRepository.Delete(flashcard.Id);
+                    });
                     _flashCardGroupRepository.Delete(id);
                 }
             }
