@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
         policy => policy
-            .WithOrigins("http://localhost:8081", "http://localhost:3000", "https://techfluency2.vercel.app") // <-- Add other mobile dev URLs if needed
+            .WithOrigins("http://localhost:8081", "http://localhost:3000", "https://techfluency.vercel.app") // <-- Add other mobile dev URLs if needed
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
